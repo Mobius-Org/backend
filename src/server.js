@@ -1,12 +1,12 @@
 const express = require('express');
-const app = express();
+const mongoose = require('mongoose');
 require('dotenv').config();
+const app = require("./app")
 
 
 
 
 const PORT = process.env.PORT
-const mongoose = require('mongoose');
 const DATABASE_URL = process.env.DATABASE_URL.toString();
 
 app.use(express.json());
