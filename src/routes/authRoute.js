@@ -14,5 +14,11 @@ router.post(
     authController.signup
 );
 
+// login
+router.post(
+    '/login',
+    authController.login
+);
+
 
 module.exports = router;

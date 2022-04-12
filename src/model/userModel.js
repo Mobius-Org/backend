@@ -11,7 +11,7 @@ const UserSchema = new Schema(
     age: { type: Number, required: true },
     favColor: reqStr,
     email: reqStr,
-    password: reqStr,
+    password: { type: String, required: true},
     enrolledCourse: [
       {
         type: Schema.Types.ObjectId,

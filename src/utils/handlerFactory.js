@@ -1,3 +1,3 @@
-exports.getOne = (Model, _id) => {
-    return Model.findOne({ _id });
+exports.getOne = (Model, param) => {
+    return Model.findOne({ param });
 }
