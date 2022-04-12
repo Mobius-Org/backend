@@ -2,6 +2,7 @@ const { Schema, model } = require("mongoose");
 const reqStr = {
   type: String,
   required: true,
+  lowercase: true
 };
 
 const UserSchema = new Schema(
