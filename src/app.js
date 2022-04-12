@@ -15,6 +15,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(morgan('dev'));
 
 //ROUTES
+app.use('/auth', require('./routes/authRoute'));
+
 
 app.get('/', (req, res) =>{
   res.status(200).send("Welcome To The Home Of MOBIUS Api!")

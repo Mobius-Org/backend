@@ -2,6 +2,7 @@ const { Schema, model } = require("mongoose");
 const reqStr = {
   type: String,
   required: true,
+  lowercase: true
 };
 
 const UserSchema = new Schema(
@@ -15,21 +16,15 @@ const UserSchema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: "Course",
-      },
-    
+      }
     ],
-
-    created_at: {
-      type: Date,
-      default: Date.now,
-    },
-    updated_at: {
-      type: Date,
-      default: Date.now,
-    },
   },
-  { timeStamp: true }
-);
+  { 
+    timeStamp: {
+    createdAt: "created_at",
+    updatedAt: "updated_at"
+  } 
+});
 
 const User = model("User", UserSchema);
 
