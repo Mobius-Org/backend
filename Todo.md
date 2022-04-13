@@ -1,3 +1,8 @@
 - [x] Create Account With Details
+- [ ] Refactor User Model
+- [ ] Refactor Create Account With Details
+- [ ] Refactor Error Handlers
+- [ ] Refactor Handler Factory
 - [x] Login With Details
+- [ ] Refactor Login With Details
 - [ ] Authentication With Google
