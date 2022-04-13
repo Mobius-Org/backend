@@ -4,6 +4,7 @@ const bcrypt               = require('../services/bcrypt');
 const AppError             = require('../errors/appError');
 const catchAsync           = require('../utils/catchAsync');
 const { validationResult } = require('express-validator');
+const handlerFactory       = require('../utils/handlerFactory');
 
 const userAuth = {};
 
@@ -35,6 +36,33 @@ userAuth.signup = catchAsync(async (req, res, next) => {
     // send response
     res.status(200).send({
         message: "User Created Successfully!"
+    });
+});
+
+
+// Login
+userAuth.login = catchAsync(async (req, res, next) => {
+    // get email and password from form
+    const { email, password } = req.body;
+
+    // if email/username or password is absent return error
+    if (!email || !password) return next(new AppError("Please Provide Email And Password!", 400));
+
+    // find user with email
+    let user = await handlerFactory.getOne(User, email);
+    if (!user) return next(new AppError("Invalid Email Or Password!", 403));
+
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) return next(new AppError("Invalid Email Or Password!", 403));
+
+    const accessToken = jwt.sign(user.name);
+    // user.token = accessToken;
+    // user = await user.save();
+
+    //send response
+    res.status(200).send({
+        message: `Hello ${user.name}! Welcome To Mobius!`,
+        data : { userId: user._id, accessToken, name: user.name }
     });
 });
 

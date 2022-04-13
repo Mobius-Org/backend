@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt');
 
 exports.hash = (password) => {
-    return bcrypt.hash(password, 10);
+    let saltRounds = 10
+    return bcrypt.hash(password, saltRounds);
 };
 
 exports.compare = (inPassword, basePassword) => {
