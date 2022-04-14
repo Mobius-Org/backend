@@ -1,3 +1,4 @@
+const cors            = require('cors')
 const morgan          = require('morgan');
 const express         = require('express');
 const AppError        = require('./errors/appError');
@@ -9,6 +10,20 @@ const app = express();
 //Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// enable cors for specific route
+const allowedOrigins = ["https://shimmering-sprite-84ee41.netlify.app", "http://localhost:3000", "http://localhost:3001"];
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}))
+app.use( (req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) res.setHeader('Access-Control-Allow-Origin', origin);
+  res.header('Access-Control-Allow-Headers', true);
+  res.header('Access-Control-Allow-Credentials', true);
+  next()
+});
 
 
 // enable morgan
