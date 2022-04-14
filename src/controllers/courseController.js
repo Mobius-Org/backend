@@ -38,7 +38,7 @@ course.create = catchAsync(async (req, res, next) => {
   });
 });
 
-//see all courses
+//see all courses MO B-17
 course.getAllCourses = catchAsync(async (req, res, next) => {
   const course = await Course.find({});
   if (!course) {
