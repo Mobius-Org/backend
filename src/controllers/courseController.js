@@ -1,4 +1,5 @@
 const Course = require("../model/courseModel");
+const User = require("../model/userModel");
 const catchAsync = require("../utils/catchAsync");
 const handlerFactory = require("../utils/handlerFactory");
 const AppError = require("../errors/appError");
@@ -53,19 +54,47 @@ course.getAllCourses = catchAsync(async (req, res, next) => {
 
 //get a course by id
 course.getOneCourse = catchAsync(async (req, res, next) => {
-  //get course name from body
+  //find course thru _id
   const _id = req.params.id;
-  console.log(_id);
+  //console.log(_id);
 
-  // check if lesson is there
   let lesson = await handlerFactory.getById(Course, _id);
   if (!lesson) return next(new AppError("Course not found", 404));
 
   //send response
   res.status(200).send({
-    message: `Course ${Course.course_id} found`,
+    message: `Course ${lesson.course} found`,
     data: { lesson },
   });
+});
+
+course.enrollCourse = catchAsync(async (req, res, next) => {
+  //find course by  id
+  const _id = req.params.id;
+  //console.log(_id);
+
+  let lesson = await handlerFactory.getById(Course, _id);
+  if (!lesson) return next(new AppError("Course not found", 404));
+
+  //find user
+  //console.log(req.USER_ID); // => undefined
+  let user = await handlerFactory.getById(User, req.USER_ID);
+  if (!user) return next(new AppError("User not found", 404));
+
+  //check if course is free
+  if (lesson.description.price === 0.0) {
+    // change course data by adding a new enrolled student
+    lesson.description.student_enrolled.push(req.USER_ID);
+    //add course to a students data
+    user.enrolledCourse.push({ _id });
+    user.save();
+
+    //send response
+    res.status(200).send({
+      message: `Student successfully enrolled in ${lesson.course}`,
+      data: lesson.description.student_enrolled,
+    });
+  }
 });
 
 module.exports = course;

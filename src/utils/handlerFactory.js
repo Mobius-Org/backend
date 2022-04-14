@@ -3,5 +3,5 @@ exports.getOne = (Model, param) => {
 };
 
 exports.getById = (Model, _id) => {
-  return Model.findById({ _id });
+  return Model.findById(_id);
 };

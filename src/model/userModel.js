@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 const reqStr = {
   type: String,
   required: true,
-  lowercase: true
+  lowercase: true,
 };
 
 const UserSchema = new Schema(
@@ -11,20 +11,22 @@ const UserSchema = new Schema(
     age: { type: Number, required: true },
     favColor: reqStr,
     email: reqStr,
-    password: { type: String, required: true},
+    password: { type: String, required: true },
     enrolledCourse: [
       {
         type: Schema.Types.ObjectId,
         ref: "Course",
-      }
+      },
     ],
+    token: String,
   },
-  { 
+  {
     timeStamp: {
-    createdAt: "created_at",
-    updatedAt: "updated_at"
-  } 
-});
+      createdAt: "created_at",
+      updatedAt: "updated_at",
+    },
+  }
+);
 
 const User = model("User", UserSchema);
 
