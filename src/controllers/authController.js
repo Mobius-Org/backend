@@ -1,6 +1,5 @@
 const jwt                  = require('../services/jwt');
 const User                 = require('../model/userModel');
-const crypto               = require('../services/crypto');
 const AppError             = require('../errors/appError');
 const catchAsync           = require('../utils/catchAsync');
 const { validationResult } = require('express-validator');
