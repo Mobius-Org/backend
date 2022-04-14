@@ -15,9 +15,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(morgan('dev'));
 
 //ROUTES
+app.use('/mbApi/v1/auth', require('./routes/authRoute'));
+app.use('/mbApi/v1/google', require('./routes/googleAuthRoute'));
+
 
 app.get('/', (req, res) =>{
-  res.status(200).send("Welcome To The Home Of MOBIUS Api!")
+  res.status(200).send("Welcome To The Home Of MOBIUS Api!");
 });
 
 
