@@ -4,5 +4,5 @@
 - [x] Refactor Global Error Handler
 - [ ] Refactor Handler Factory
 - [x] Login With Details
-- [ ] Refactor Login With Details
+- [x] Refactor Login With Details
 - [ ] Authentication With Google

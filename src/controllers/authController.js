@@ -58,21 +58,16 @@ userAuth.login = catchAsync(async (req, res, next) => {
     if (!email || !password) return next(new AppError("Please Provide Email And Password!", 400));
 
     // find user with email
-    let user = await handlerFactory.getOne(User, email);
-    if (!user) return next(new AppError("Invalid Email Or Password!", 403));
+    let user = await User.findOne({ email }).select(exclude);
+    if (!user) return next(new AppError(`User With Email: ${email}, Not Registered. Create Account Instead!`, 404));
 
-    const isValidPassword = await bcrypt.compare(password, user.password);
-    if (!isValidPassword) return next(new AppError("Invalid Email Or Password!", 403));
-
-    const accessToken = jwt.sign(user.name);
-    // user.token = accessToken;
-    // user = await user.save();
-
-    //send response
-    res.status(200).send({
-        message: `Hello ${user.name}! Welcome To Mobius!`,
-        data : { userId: user._id, accessToken, name: user.name }
-    });
+    // validate user
+    if (user.isValidPassword(password)){
+        user.lastLoginTime = new Date();
+        user.lastLogoutTime = null;
+        await user.save();
+        jwt.createSendToken(user, 200, res);
+    } else return next(new AppError("Invalid Email Or Password!", 403));
 });
 
 module.exports = userAuth;

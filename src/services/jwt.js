@@ -12,12 +12,16 @@ exports.decode = ( token ) => {
     } );
 }
 
-exports.createSendToken = (user, status, res, message='successful') => {
+exports.createSendToken = (user, status, res) => {
     let token = user.genJwt()
     user = user.toObject()
-    user.token = token
+    //user.token = token
     delete user.password
     delete user.lastLogoutTime
     delete user.lastLoginTime
-    res.status(status).json({message: message, user})
-  }
+    res.status(status).send({
+        status: "success",
+        message: `Hello ${user.name}! Welcome To Mobius!`,
+        user
+    });
+};
