@@ -1,5 +1,6 @@
 const Course = require("../model/courseModel");
 const catchAsync = require("../utils/catchAsync");
+const handlerFactory = require("../utils/handlerFactory");
 const AppError = require("../errors/appError");
 
 const course = {};
@@ -42,10 +43,29 @@ course.getAllCourses = catchAsync(async (req, res, next) => {
   if (!course) {
     return next(new AppError(`Could not GET all courses`, 404));
   }
-  res.send(course);
+
+  //send a response
+  res.status(200).send({
+    message: `All courses `,
+    data: { course },
+  });
 });
 
 //get a course by id
-course.getOneCourse = async () => {};
+course.getOneCourse = catchAsync(async (req, res, next) => {
+  //get course name from body
+  const _id = req.params.id;
+  console.log(_id);
+
+  // check if lesson is there
+  let lesson = await handlerFactory.getById(Course, _id);
+  if (!lesson) return next(new AppError("Course not found", 404));
+
+  //send response
+  res.status(200).send({
+    message: `Course ${Course.course_id} found`,
+    data: { lesson },
+  });
+});
 
 module.exports = course;
