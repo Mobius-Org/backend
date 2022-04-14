@@ -33,7 +33,8 @@ const userSchema = new Schema(
     passwordChangedAt: {
       type: Date,
       default: new Date()
-    }
+    },
+    token: String,
   },
   {
     timeStamp: {
