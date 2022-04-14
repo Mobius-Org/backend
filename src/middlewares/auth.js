@@ -14,6 +14,6 @@ exports.auth = async (req, res, next) => {
     if (!user) return next(new AppError("User Not Logged In!", 401));
 
     req.USER_ID = user?._id || undefined;
-    req.fullName = user?.name || undefined;
+    req.name = user?.name || undefined;
     next();
 }

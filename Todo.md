@@ -6,3 +6,4 @@
 - [x] Login With Details
 - [x] Refactor Login With Details
 - [x] Authentication With Google
+- [x] Create Middleware
