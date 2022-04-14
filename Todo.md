@@ -5,4 +5,4 @@
 - [ ] Refactor Handler Factory
 - [x] Login With Details
 - [x] Refactor Login With Details
-- [ ] Authentication With Google
+- [x] Authentication With Google
