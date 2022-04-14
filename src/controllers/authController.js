@@ -1,12 +1,18 @@
 const jwt                  = require('../services/jwt');
 const User                 = require('../model/userModel');
-const bcrypt               = require('../services/bcrypt');
+const crypto               = require('../services/crypto');
 const AppError             = require('../errors/appError');
 const catchAsync           = require('../utils/catchAsync');
 const { validationResult } = require('express-validator');
 const handlerFactory       = require('../utils/handlerFactory');
 
 const userAuth = {};
+const exclude = {
+    lastLoginTime: 0,
+    lastLogoutTime: 0,
+    passwordChangedTime: 0
+};
+
 
 // User Sign Up
 userAuth.signup = catchAsync(async (req, res, next) => {
@@ -25,16 +31,19 @@ userAuth.signup = catchAsync(async (req, res, next) => {
     const userExist = await User.exists({ email });
     if (userExist) return next(new AppError("User With Email Already Exists!", 400));
 
-    // hash passwords
-    const passwordHash = await bcrypt.hash(password)
-
-    // save user
-    const user = await new User({ name, age, favColor, email, password: passwordHash }).save();
+    // create user
+    const user = new User();
+    // set password
+    user.setPassword(password);
+    // set details
+    user.set({ name, age, email, favColor });
+    await user.save();
 
     if (!user) return next( new AppError("Could Not Creat User!", 403));
     
     // send response
-    res.status(200).send({
+    res.status(201).send({
+        status: "success",
         message: "User Created Successfully!"
     });
 });

@@ -1,6 +1,6 @@
 - [x] Create Account With Details
 - [x] Refactor User Model
-- [ ] Refactor Create Account With Details
+- [x] Refactor Create Account With Details
 - [x] Refactor Global Error Handler
 - [ ] Refactor Handler Factory
 - [x] Login With Details

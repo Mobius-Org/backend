@@ -11,3 +11,13 @@ exports.decode = ( token ) => {
         else return decoded;
     } );
 }
+
+exports.createSendToken = (user, status, res, message='successful') => {
+    let token = user.genJwt()
+    user = user.toObject()
+    user.token = token
+    delete user.password
+    delete user.lastLogoutTime
+    delete user.lastLoginTime
+    res.status(status).json({message: message, user})
+  }
