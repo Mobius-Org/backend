@@ -16,6 +16,7 @@ app.use(morgan('dev'));
 
 //ROUTES
 app.use('/auth', require('./routes/authRoute'));
+app.use('/google', require('./routes/googleAuthRoute'));
 
 
 app.get('/', (req, res) =>{
