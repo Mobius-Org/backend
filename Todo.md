@@ -7,3 +7,4 @@
 - [x] Refactor Login With Details
 - [x] Authentication With Google
 - [x] Create Middleware
+- [ ] Forgot Password Endpoint
