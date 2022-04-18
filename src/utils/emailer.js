@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 const inlinecss = require('nodemailer-juice');
-const pug = require('pug')
+const pug = require('pug');
+const path = require('path');
 const { MAILJET_USER, MAILJET_PORT, MAILJET_PASSWORD, MAILJET_HOST, MAILJET_ADDRESS } = process.env;
 
 exports.emailService = class Email{
@@ -19,7 +20,7 @@ exports.emailService = class Email{
     }
 
     async reset(body){
-        let html = pug.renderFile("./public/email/resetPassword.pug", body.data)
+        let html = pug.renderFile( path.join(__dirname, "../public/email/resetPassword.pug"), body.data );
         const mailOptions = {
             from: this.from,
             to: body.recipient,

@@ -35,6 +35,10 @@ const userSchema = new Schema(
       default: new Date()
     },
     token: String,
+    resetToken: {
+      type: String,
+      default: ""
+    }
   },
   {
     timeStamp: {
@@ -68,6 +72,8 @@ userSchema.methods.genJwt = function() {
 userSchema.methods.genResetToken = function() {
   const expire = new Date();
   expire.setDate( expire.getDate() + 1);
-  return jwt.signResetToken({ id: this._id });
+  return jwt.signResetToken({ id: this._id }, this.password.hash );
 };
+
+
 module.exports = model("User", userSchema);

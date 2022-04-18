@@ -68,7 +68,7 @@ userAuth.login = catchAsync(async (req, res, next) => {
 
 
 // Forgot Password
-exports.forgotPassword = catchAsync(async (req, res, next) => {
+userAuth.forgotPassword = catchAsync(async (req, res, next) => {
     const { email } = req.body;
 
     // check if user exists
@@ -76,7 +76,9 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     if (!user) return next(new AppError(`User With Email: ${email}, Is Not Registered!`, 404));
     else {
         // generate reset token
-        user.genResetToken();
+        const resetToken = user.genResetToken();
+        user.resetToken = resetToken;
+        await user.save();
         // generate one time valid for 20 minutes link
         const link = `${req.get('origin')}/reset-password/${user.resetToken}`;
 

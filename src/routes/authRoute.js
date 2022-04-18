@@ -27,10 +27,10 @@ router.patch(
 );
 
 // reset password
-router.patch(
-    '/reset-password',
-    authController.resetPassword
-);
+// router.patch(
+//     '/reset-password',
+//     authController.Password
+// );
 
 
 module.exports = router;
