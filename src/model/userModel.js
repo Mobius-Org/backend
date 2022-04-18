@@ -64,4 +64,10 @@ userSchema.methods.genJwt = function() {
   return jwt.sign({ id: this._id, email: this.email, name: this.name });
 };
 
+// Generate Reset Token
+userSchema.methods.genResetToken = function() {
+  const expire = new Date();
+  expire.setDate( expire.getDate() + 1);
+  return jwt.signResetToken({ id: this._id });
+};
 module.exports = model("User", userSchema);

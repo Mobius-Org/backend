@@ -3,13 +3,12 @@ const User                 = require('../model/userModel');
 const AppError             = require('../errors/appError');
 const catchAsync           = require('../utils/catchAsync');
 const { validationResult } = require('express-validator');
-const handlerFactory       = require('../utils/handlerFactory');
 
 const userAuth = {};
 const exclude = {
     lastLoginTime: 0,
     lastLogoutTime: 0,
-    passwordChangedTime: 0
+    passwordChangedTime: 0,
 };
 
 
@@ -41,10 +40,7 @@ userAuth.signup = catchAsync(async (req, res, next) => {
     if (!user) return next( new AppError("Could Not Creat User!", 403));
     
     // send response
-    res.status(201).send({
-        status: "success",
-        message: "User Created Successfully!"
-    });
+    jwt.createSendToken(user, 201, res);
 });
 
 
@@ -68,5 +64,41 @@ userAuth.login = catchAsync(async (req, res, next) => {
         jwt.createSendToken(user, 200, res);
     } else return next(new AppError("Invalid Email Or Password!", 403));
 });
+
+
+// Forgot Password
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+    const { email } = req.body;
+
+    // check if user exists
+    const user = await User.findOne({ email });
+    if (!user) return next(new AppError(`User With Email: ${email}, Is Not Registered!`, 404));
+    else {
+        // generate reset token
+        user.genResetToken();
+        // generate one time valid for 20 minutes link
+        const link = `${req.get('origin')}/reset-password/${user.resetToken}`;
+
+        // send mail
+        // let body
+
+        res.status(200).send({
+            status: "success",
+            message: "Password Reset Successful! Please Check Your Email For A Link To Change Your Password!"
+        })
+    }
+
+
+      let body = {
+          data: {link: `${req.get('origin')}/resetPassword/${token}`, name: user.name, title: 'Password Reset'},
+        recipient: user.email, subject: "Password Reset", type: 'pwd_reset'}
+  
+      let mailer = new emailService()
+      let resp = await mailer.reset(body)
+      res.status(200).json({
+        status: 'success',
+        message: 'A password reset code has been sent to your Email',
+      });
+  });
 
 module.exports = userAuth;
