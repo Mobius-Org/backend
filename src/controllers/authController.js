@@ -41,10 +41,7 @@ userAuth.signup = catchAsync(async (req, res, next) => {
     if (!user) return next( new AppError("Could Not Creat User!", 403));
     
     // send response
-    res.status(201).send({
-        status: "success",
-        message: "User Created Successfully!"
-    });
+    jwt.createSendToken(user, 201, res);
 });
 
 

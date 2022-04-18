@@ -18,6 +18,8 @@ exports.createSendToken = (user, status, res) => {
     delete user.password;
     delete user.lastLogoutTime;
     delete user.lastLoginTime;
+    delete user.__v;
+    delete user.resetToken;
     res.status(status).send({
         status: "success",
         message: `Hello ${user.name}! Welcome To Mobius!`,

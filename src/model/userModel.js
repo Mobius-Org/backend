@@ -35,6 +35,10 @@ const userSchema = new Schema(
       default: new Date()
     },
     token: String,
+    resetToken: {
+      data: String,
+      default: ""
+    }
   },
   {
     timeStamp: {
