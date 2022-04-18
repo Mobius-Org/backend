@@ -3,6 +3,7 @@ const User                 = require('../model/userModel');
 const AppError             = require('../errors/appError');
 const catchAsync           = require('../utils/catchAsync');
 const { validationResult } = require('express-validator');
+const { emailService } = require('../utils/emailer');
 
 const userAuth = {};
 const exclude = {
@@ -80,25 +81,26 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
         const link = `${req.get('origin')}/reset-password/${user.resetToken}`;
 
         // send mail
-        // let body
+        let body = {
+            data: {
+                link,
+                name: user.name,
+                title: "RESET PASSWORD"
+            },
+            recipient: user.email,
+            subject: "PASSWORD RESET",
+            type: "pwd_reset"
+        };
 
+        let mailer = new emailService(),
+            response = await mailer.reset(body);
+
+        // send response
         res.status(200).send({
             status: "success",
             message: "Password Reset Successful! Please Check Your Email For A Link To Change Your Password!"
-        })
+        });
     }
-
-
-      let body = {
-          data: {link: `${req.get('origin')}/resetPassword/${token}`, name: user.name, title: 'Password Reset'},
-        recipient: user.email, subject: "Password Reset", type: 'pwd_reset'}
-  
-      let mailer = new emailService()
-      let resp = await mailer.reset(body)
-      res.status(200).json({
-        status: 'success',
-        message: 'A password reset code has been sent to your Email',
-      });
   });
 
 module.exports = userAuth;

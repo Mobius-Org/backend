@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 const inlinecss = require('nodemailer-juice');
 const pug = require('pug')
-const { MAILJET_USER, MAILJET_PORT, MAILJET_PASSWORD, MAILJET_HOST, MAILJET_ADDRESS} = process.env;
+const { MAILJET_USER, MAILJET_PORT, MAILJET_PASSWORD, MAILJET_HOST, MAILJET_ADDRESS } = process.env;
 
 exports.emailService = class Email{
     constructor(sender){
