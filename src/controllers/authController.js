@@ -3,13 +3,13 @@ const User                 = require('../model/userModel');
 const AppError             = require('../errors/appError');
 const catchAsync           = require('../utils/catchAsync');
 const { validationResult } = require('express-validator');
-const handlerFactory       = require('../utils/handlerFactory');
+const { emailService } = require('../utils/emailer');
 
 const userAuth = {};
 const exclude = {
     lastLoginTime: 0,
     lastLogoutTime: 0,
-    passwordChangedTime: 0
+    passwordChangedTime: 0,
 };
 
 
@@ -64,6 +64,70 @@ userAuth.login = catchAsync(async (req, res, next) => {
         await user.save();
         jwt.createSendToken(user, 200, res);
     } else return next(new AppError("Invalid Email Or Password!", 403));
+});
+
+
+// Forgot Password
+userAuth.forgotPassword = catchAsync(async (req, res, next) => {
+    const { email } = req.body;
+
+    // check if user exists
+    const user = await User.findOne({ email });
+    if (!user) return next(new AppError(`User With Email: ${email}, Is Not Registered!`, 404));
+    else {
+        // generate reset token
+        const resetToken = user.genResetToken();
+        user.resetToken = resetToken;
+        await user.save();
+        // generate one time valid for 20 minutes link
+        const link = `${req.get('origin')}/reset-password/${user.resetToken}`;
+
+        // send mail
+        let body = {
+            data: {
+                link,
+                name: user.name,
+                title: "RESET PASSWORD"
+            },
+            recipient: user.email,
+            subject: "PASSWORD RESET",
+            type: "pwd_reset"
+        };
+
+        let mailer = new emailService(),
+            response = await mailer.reset(body);
+
+        // send response
+        res.status(200).send({
+            status: "success",
+            message: "Password Reset Successful! Please Check Your Email For A Link To Change Your Password!"
+        });
+    }
+});
+
+
+// Change Password
+userAuth.resetPassword = catchAsync(async (req, res, next) => {
+    const resetToken = req.params.token;
+
+    // find user with token
+    let user = await User.findOne({ resetToken });
+    if (!user) return next(new AppError("Cannot Find User With Initial Password Reset Request!", 400));
+
+    let data = jwt.decodeResetToken(resetToken, user.password.hash),
+        newPassword = req.body.password;
+
+    if (!data) return next(new AppError("Link Expired Or Has Already Been Used! Initiate Another Request."));
+
+    // change password
+    user.setPassword(newPassword);
+    user.passwordChangedAt = new Date();
+    user.resetToken = "";
+    await user.save()
+    res.status(200).send({
+        status: "success",
+        message: "Password Changed Successfully!"
+    });
 });
 
 module.exports = userAuth;
