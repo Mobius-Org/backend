@@ -103,6 +103,31 @@ userAuth.forgotPassword = catchAsync(async (req, res, next) => {
             message: "Password Reset Successful! Please Check Your Email For A Link To Change Your Password!"
         });
     }
-  });
+});
+
+
+// Change Password
+userAuth.resetPassword = catchAsync(async (req, res, next) => {
+    const resetToken = req.params.token;
+
+    // find user with token
+    let user = await User.findOne({ resetToken });
+    if (!user) return next(new AppError("Cannot Find User With Initial Password Reset Request!", 400));
+
+    let data = jwt.decodeResetToken(resetToken, user.password.hash),
+        newPassword = req.body.password;
+
+    if (!data) return next(new AppError("Link Expired Or Has Already Been Used! Initiate Another Request."));
+
+    // change password
+    user.setPassword(newPassword);
+    user.passwordChangedAt = new Date();
+    user.resetToken = "";
+    await user.save()
+    res.status(200).send({
+        status: "success",
+        message: "Password Changed Successfully!"
+    });
+});
 
 module.exports = userAuth;
