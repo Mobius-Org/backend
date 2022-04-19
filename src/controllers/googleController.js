@@ -29,6 +29,7 @@ exports.googleAuth = (req, res) => {
     res.redirect(result);
 }
 
+// Get Auth Code
 exports.getAuthCode = async(req, res, next) => {
     // get code from url
     const code = req.query.code.toString();
@@ -71,6 +72,3 @@ exports.getAuthCode = async(req, res, next) => {
     await storedUser.save();
     next();
 }
-
-
-
