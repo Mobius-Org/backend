@@ -1,10 +1,11 @@
-const http = require('http');
-require('dotenv').config();
+const gameModel = require("./model/gameModel");
+const http = require("http");
+require("dotenv").config();
 
-const app = require('./app');
+const app = require("./app");
 
 // connect database
-require('./db/connectDB');
+require("./db/connectDB");
 
 // Instantiate the HTTP server
 const server = http.createServer(app);

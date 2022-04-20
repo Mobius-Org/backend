@@ -20,8 +20,20 @@ course.create = catchAsync(async (req, res, next) => {
   const courseExist = await Course.exists({ course });
   if (courseExist) return next(new AppError("Course already Exists", 400));
 
+  //change id to MOB-N
+  let courseId;
+
+  const lastCourse = await Course.find().sort({ _id: -1 }).limit(1);
+
+  if (lastCourse.length == 0) {
+    courseId = "MOB-1";
+  } else {
+    courseId = "MOB-" + `${Number(lastCourse[0].courseId.split("-")[1]) + 1} `;
+  }
+
   //save new Course
   const new_course = await new Course({
+    courseId,
     course,
     introduction,
     game,

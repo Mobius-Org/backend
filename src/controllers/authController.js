@@ -6,6 +6,7 @@ const catchAsync = require("../utils/catchAsync");
 const { validationResult } = require("express-validator");
 const handlerFactory = require("../utils/handlerFactory");
 
+
 const userAuth = {};
 
 // User Sign Up
@@ -38,6 +39,8 @@ userAuth.signup = catchAsync(async (req, res, next) => {
 
   // hash passwords
   const passwordHash = await bcrypt.hash(password);
+  // const games = await game.find().sort({ _id: -1}).limit(1);
+  // console.log(games);
 
   // save user
   const user = await new User({

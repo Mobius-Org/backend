@@ -5,6 +5,7 @@ const reqStr = {
 };
 
 const CourseSchema = new Schema({
+  courseId: {type: String},
   course: reqStr,
   introduction: reqStr,
   game: {
