@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // enable cors for specific route
-const allowedOrigins = ["https://shimmering-sprite-84ee41.netlify.app", "http://localhost:3000", "http://localhost:3001"];
+const allowedOrigins = ["https://mobius-dev-test.netlify.app", "http://localhost:3000", "http://localhost:3001"];
 app.use(cors({
   origin: allowedOrigins,
   credentials: true
@@ -25,24 +25,21 @@ app.use( (req, res, next) => {
   next()
 });
 
-
 // enable morgan
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 
 //ROUTES
 app.use('/mbApi/v1/auth', require('./routes/authRoute'));
 app.use('/mbApi/v1/google', require('./routes/googleAuthRoute'));
 
 
-app.get('/', (req, res) =>{
+app.get('/', (req, res) => {
   res.status(200).send("Welcome To The Home Of MOBIUS Api!");
 });
 
-
-app.all('**', (req, res, next) => {
+app.all("**", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
-
 
 app.use(appErrorHandler);
 
