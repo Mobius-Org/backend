@@ -1,8 +1,8 @@
-const Course = require("../model/courseModel");
-const User = require("../model/userModel");
-const catchAsync = require("../utils/catchAsync");
+const User           = require("../model/userModel");
+const Course         = require("../model/courseModel");
+const AppError       = require("../errors/appError");
+const catchAsync     = require("../utils/catchAsync");
 const handlerFactory = require("../utils/handlerFactory");
-const AppError = require("../errors/appError");
 
 const course = {};
 
