@@ -52,10 +52,6 @@ userAuth.login = catchAsync(async (req, res, next) => {
   // if email/username or password is absent return error
   if (!email || !password)
     return next(new AppError("Please Provide Email And Password!", 400));
-
-  // find user with email
-
-  let user = await handlerFactory.getOne(User, email);
     // find user with email
     let user = await User.findOne({ email }).select(exclude);
     if (!user) return next(new AppError(`User With Email: ${email}, Not Registered. Create Account Instead!`, 404));
