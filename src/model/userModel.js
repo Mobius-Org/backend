@@ -1,12 +1,12 @@
-const jwt = require("../services/jwt");
-const crypto = require("../services/crypto");
+const jwt               = require("../services/jwt");
+const crypto            = require("../services/crypto");
 const { Schema, model } = require("mongoose");
 
 
 const reqStr = {
   type: String,
   required: true,
-  lowercase: true
+  lowercase: true,
 };
 
 const userSchema = new Schema(
@@ -26,7 +26,7 @@ const userSchema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: "Course",
-      }
+      },
     ],
     lastLoginTime: Date,
     lastLogoutTime: Date,

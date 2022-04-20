@@ -3,7 +3,7 @@ const User                 = require('../model/userModel');
 const AppError             = require('../errors/appError');
 const catchAsync           = require('../utils/catchAsync');
 const { validationResult } = require('express-validator');
-const { emailService } = require('../utils/emailer');
+const { emailService }     = require('../utils/emailer');
 
 const userAuth = {};
 const exclude = {
@@ -44,15 +44,35 @@ userAuth.signup = catchAsync(async (req, res, next) => {
     jwt.createSendToken(user, 201, res);
 });
 
+  // save user
+  const user = await new User({
+    name,
+    age,
+    favColor,
+    email,
+    password: passwordHash,
+  }).save();
+
+  if (!user) return next(new AppError("Could Not Creat User!", 403));
+
+  // send response
+  res.status(200).send({
+    message: "User Created Successfully!",
+  });
+});
 
 // Login
 userAuth.login = catchAsync(async (req, res, next) => {
-    // get email and password from form
-    const { email, password } = req.body;
+  // get email and password from form
+  const { email, password } = req.body;
 
-    // if email/username or password is absent return error
-    if (!email || !password) return next(new AppError("Please Provide Email And Password!", 400));
+  // if email/username or password is absent return error
+  if (!email || !password)
+    return next(new AppError("Please Provide Email And Password!", 400));
 
+  // find user with email
+
+  let user = await handlerFactory.getOne(User, email);
     // find user with email
     let user = await User.findOne({ email }).select(exclude);
     if (!user) return next(new AppError(`User With Email: ${email}, Not Registered. Create Account Instead!`, 404));
