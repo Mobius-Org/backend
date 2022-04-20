@@ -28,7 +28,7 @@ course.create = catchAsync(async (req, res, next) => {
   if (lastCourse.length == 0) {
     courseId = "MOB-1";
   } else {
-    courseId = "MOB-" + `${Number(lastCourse[0].courseId.split("-")[1]) + 1} `;
+    courseId = "MOB-" + `${Number(lastCourse[0].courseId.split("-")[1]) + 1}`;
   }
 
   //save new Course
