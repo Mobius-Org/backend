@@ -46,11 +46,11 @@ userAuth.signup = catchAsync(async (req, res, next) => {
 
 // Login
 userAuth.login = catchAsync(async (req, res, next) => {
-  // get email and password from form
-  const { email, password } = req.body;
+    // get email and password from form
+    const { email, password } = req.body;
 
-  // if email/username or password is absent return error
-  if (!email || !password)
+    // if email/username or password is absent return error
+    if (!email || !password)
     return next(new AppError("Please Provide Email And Password!", 400));
     // find user with email
     let user = await User.findOne({ email }).select(exclude);
