@@ -21,7 +21,7 @@ const sendErrorProd = ( err, res ) => {
         });
     // For Unknown errors (untrusted), handle internally
     } else {
-        console.error("ERRRO", err);
+        console.error("ERROR", err);
         res.status(500).send({
             status: "Error",
             message: "Something Went Wrong!"
