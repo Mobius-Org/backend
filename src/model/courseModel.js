@@ -15,7 +15,14 @@ const courseSchema = new Schema(
         video: reqStr,
         text: reqStr
       },
-      contents: [],
+      contents: [
+        {
+          title: reqStr,
+          transcript: reqStr,
+          video: reqStr,
+          text: reqStr
+        }
+      ],
       game: {
         type: Schema.Types.ObjectId,
         ref: "Game",
@@ -30,6 +37,7 @@ const courseSchema = new Schema(
     description: {
       price: Number,
       summary: reqStr,
+      image: reqStr,
       studentEnrolled: [
         {
           type: Schema.Types.ObjectId,
