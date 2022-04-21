@@ -29,8 +29,8 @@ app.use( (req, res, next) => {
 app.use(morgan("dev"));
 
 //ROUTES
-app.use('/mbApi/v1/auth', require('./routes/authRoute'));
-app.use('/mbApi/v1/google', require('./routes/googleAuthRoute'));
+app.use('/api/v1/auth', require('./routes/authRoute'));
+app.use('/api/v1/google', require('./routes/googleAuthRoute'));
 
 
 app.get('/', (req, res) => {
