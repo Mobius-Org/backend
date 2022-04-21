@@ -1,8 +1,8 @@
-const Course = require("../model/courseModel");
-const User = require("../model/userModel");
-const catchAsync = require("../utils/catchAsync");
+const User           = require("../model/userModel");
+const Course         = require("../model/courseModel");
+const AppError       = require("../errors/appError");
+const catchAsync     = require("../utils/catchAsync");
 const handlerFactory = require("../utils/handlerFactory");
-const AppError = require("../errors/appError");
 const { cloudUpload } = require("..//utils/cloudinary");
 const upload = require("../utils/multer");
 
@@ -30,7 +30,7 @@ course.create = catchAsync(async (req, res, next) => {
   if (lastCourse.length == 0) {
     courseId = "MOB-1";
   } else {
-    courseId = "MOB-" + `${Number(lastCourse[0].courseId.split("-")[1]) + 1} `;
+    courseId = "MOB-" + `${Number(lastCourse[0].courseId.split("-")[1]) + 1}`;
   }
 
   //save new Course
