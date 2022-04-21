@@ -7,7 +7,7 @@ const reqStr = {
 const courseSchema = new Schema(
   {
     courseId: String,
-    course: reqStr,
+    courseName: reqStr,
     sections: {
       introduction: {
         title: reqStr,
@@ -17,10 +17,10 @@ const courseSchema = new Schema(
       },
       contents: [
         {
-          title: reqStr,
-          transcript: reqStr,
-          video: reqStr,
-          text: reqStr
+          title: String,
+          transcript: String,
+          video: String,
+          text: String
         }
       ],
       game: {
@@ -28,14 +28,14 @@ const courseSchema = new Schema(
         ref: "Game",
       },
       studentCreation: {
-        name: reqStr,
+        title: reqStr,
         video: reqStr,
         transcript: reqStr,
         text: reqStr
       }
     },
     description: {
-      price: Number,
+      price: reqStr,
       summary: reqStr,
       image: reqStr,
       studentEnrolled: [
@@ -62,11 +62,16 @@ const courseSchema = new Schema(
 
 
 //// INSTANCE METHODS
-// Create Sections
+// Add Sections
 courseSchema.methods.addSections = function(introduction, game, studentCreation) {
     this.sections.introduction = introduction;
     this.sections.game = game;
     this.sections.studentCreation = studentCreation;
+};
+
+// Add Description
+courseSchema.methods.addDescription = function(descr) {
+  this.description = descr;
 };
 
 // Add Course Contents
@@ -106,6 +111,11 @@ courseSchema.methods.review = function(review) {
       this.courseReview.sad = num2Perc(this.courseReview.sad, total),
       this.courseReview.neutral = perc2Num(this.courseReview.neutral, total);
     } 
-}
+};
+
+// Enroll Students
+courseSchema.methods.enroll = function(sId) {
+  this.description.studentEnrolled.push(sId);
+};
 
 module.exports = model("Course", courseSchema);
