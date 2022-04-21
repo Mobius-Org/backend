@@ -87,10 +87,10 @@ courseSchema.methods.review = function(review) {
     };
 
     // check review zero state
-    if ( this.couresReview.total === 0 ) {
+    if ( this.courseReview.total === 0 ) {
       // add new review
       this.courseReview[review] ++;
-      this.couresReview.total ++;
+      this.courseReview.total ++;
     } else {
       let total = this.courseReview.total;
         this.courseReview.happy = perc2Num(this.courseReview.happy, total),
@@ -99,7 +99,7 @@ courseSchema.methods.review = function(review) {
 
       // add new review
       this.courseReview[review] ++;
-      this.couresReview.total ++;
+      this.courseReview.total ++;
 
       // convert back to percentage
       this.courseReview.happy = num2Perc(this.courseReview.happy, total),
