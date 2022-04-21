@@ -3,6 +3,8 @@ const User = require("../model/userModel");
 const catchAsync = require("../utils/catchAsync");
 const handlerFactory = require("../utils/handlerFactory");
 const AppError = require("../errors/appError");
+const { cloudUpload } = require("..//utils/cloudinary");
+const upload = require("../utils/multer");
 
 const course = {};
 
@@ -107,6 +109,42 @@ course.enrollCourse = catchAsync(async (req, res, next) => {
       data: lesson.description.student_enrolled,
     });
   }
+});
+
+//multer
+course.uploadImage = upload.array("video", 5);
+
+// upload content
+course.uploadContent = catchAsync(async (req, res, next) => {
+  // find course in question with _id
+  // const _id = req.params.id;
+
+  // let lesson = await handlerFactory.getById(Course, _id);
+  // if (!lesson) return next(new AppError("Course not found", 404));
+
+  //cloudinary
+
+  if (req.files) {
+    const files = req.files;
+    files.forEach((path) => cloudUpload(path));
+  }
+
+  res.status(200).send({ message: "Course video updated successfully" });
+
+  //const result = await cloudUpload(req.file.path);
+  // res.send(result);
+
+  //const {} = req.body;
+
+  //save new content uploaded
+  //const new_course = await new Course({}).save();
+
+  //if (!new_course) return next(new AppError("Could Not Upload Content", 403));
+
+  //send a response
+  // res.status(200).send({
+  //   message: "Content Uploaded Successfully!",
+  //});
 });
 
 module.exports = course;
