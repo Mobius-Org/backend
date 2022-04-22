@@ -2,6 +2,13 @@ const jwt               = require("../services/jwt");
 const crypto            = require("../services/crypto");
 const { Schema, model } = require("mongoose");
 
+// prototype to convert strings to title
+String.prototype.toTitleCase = function(){
+  return this.toLowerCase().split(' ').map(function(word) {
+    return (word.charAt(0).toUpperCase() + word.slice(1));
+  }).join(' ');
+}
+
 
 const reqStr = {
   type: String,
@@ -145,18 +152,24 @@ userSchema.methods.setGameBadge = function(id) {
 };
 
 // Set Game Badge
-userSchema.methods.setGameBadge = function(id) {
+userSchema.methods.setCreatorBadge = function(id) {
   this.enrolledCourse.filter(course => course.id === id).badges.creatorBadge = "acquired";
 };
 
 // Set Game Score
-userSchema.methods.setGameBadge = function(id, score) {
+userSchema.methods.setScore = function(id, score) {
   this.enrolledCourse.filter(course => course.id === id).gameScore = score;
 };
 
 // Set Course Progress
-userSchema.methods.setGameBadge = function(id, currSection) {
+userSchema.methods.setProgress = function(id, currSection) {
   this.enrolledCourse.filter(course => course.id === id).progress = currSection;
 };
+
+// Get Name
+userSchema.methods.getFullName = function(){
+  return this.name.toTitleCase();
+};
+
 
 module.exports = model("User", userSchema);

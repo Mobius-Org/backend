@@ -1,11 +1,11 @@
-const User = require("../model/userModel");
-const Course = require("../model/courseModel");
-const AppError = require("../errors/appError");
-const catchAsync = require("../utils/catchAsync");
-const handlerFactory = require("../utils/handlerFactory");
-const { cloudUpload } = require("..//utils/cloudinary");
-const upload = require("../utils/multer");
-const fs = require("fs");
+const fs              = require("fs");
+const User            = require("../model/userModel");
+const upload          = require("../utils/multer");
+const Course          = require("../model/courseModel");
+const AppError        = require("../errors/appError");
+const catchAsync      = require("../utils/catchAsync");
+const handlerFactory  = require("../utils/handlerFactory");
+const { cloudUpload } = require("../utils/cloudinary");
 
 const courseController = {};
 
@@ -115,32 +115,32 @@ courseController.createContent = catchAsync(async (req, res, next) => {
 });
 
 //see all courses MO B-17
-courseController.getAllCourses = catchAsync(async (req, res, next) => {
-  const course = await Course.find({});
-  if (!course) {
+course.getAllCourses = catchAsync(async (req, res, next) => {
+  const courses = await Course.find({});
+  if (!courses) {
     return next(new AppError(`Could not GET all courses`, 404));
   }
 
   //send a response
-  res.status(201).send({
-    message: `All courses `,
-    data: { course },
+  res.status(200).send({
+    status: "status",
+    data: courses,
   });
 });
 
 //get a course by id
 courseController.getOneCourse = catchAsync(async (req, res, next) => {
   //find course thru _id
-  const _id = req.params.id;
+  const courseId = req.params.id;
   //console.log(_id);
 
-  let lesson = await handlerFactory.getById(Course, _id);
-  if (!lesson) return next(new AppError("Course not found", 404));
+  let course = await courseModel.findOne({ courseId });
+  if (!course) return next(new AppError("Course not found", 404));
 
   //send response
-  res.status(201).send({
-    message: `Course ${lesson.course} found`,
-    data: { lesson },
+  res.status(200).send({
+    status: "success",
+    course
   });
 });
 
