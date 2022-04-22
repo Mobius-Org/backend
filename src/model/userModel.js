@@ -145,17 +145,17 @@ userSchema.methods.setGameBadge = function(id) {
 };
 
 // Set Game Badge
-userSchema.methods.setGameBadge = function(id) {
+userSchema.methods.setCreatorBadge = function(id) {
   this.enrolledCourse.filter(course => course.id === id).badges.creatorBadge = "acquired";
 };
 
 // Set Game Score
-userSchema.methods.setGameBadge = function(id, score) {
+userSchema.methods.setScore = function(id, score) {
   this.enrolledCourse.filter(course => course.id === id).gameScore = score;
 };
 
 // Set Course Progress
-userSchema.methods.setGameBadge = function(id, currSection) {
+userSchema.methods.setProgress = function(id, currSection) {
   this.enrolledCourse.filter(course => course.id === id).progress = currSection;
 };
 
