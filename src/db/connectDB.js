@@ -14,6 +14,6 @@ if (process.env.NODE_ENV === 'production') {
             useUnifiedTopology: true,
         })
         .then(() => console.log(':>>>>>>> DB Connection Successful'))
-        .catch((err) => console.log(':<<<<<<< DB Connection Failed'));
+        .catch((err) => console.log(':<<<<<<< DB Connection Failed', err.message));
     }
 )();

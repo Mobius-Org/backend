@@ -5,6 +5,7 @@ const catchAsync           = require('../utils/catchAsync');
 const { validationResult } = require('express-validator');
 const { emailService }     = require('../utils/emailer');
 
+
 const userAuth = {};
 const exclude = {
     lastLoginTime: 0,
@@ -75,17 +76,19 @@ userAuth.forgotPassword = catchAsync(async (req, res, next) => {
     if (!user) return next(new AppError(`User With Email: ${email}, Is Not Registered!`, 404));
     else {
         // generate reset token
-        const resetToken = user.genResetToken();
+        const resetToken = user.genResetToken(),
+              fullName = user.getFullName();
+
         user.resetToken = resetToken;
         await user.save();
         // generate one time valid for 20 minutes link
-        const link = `${req.get('origin')}/reset-password/${user.resetToken}`;
+        const link = `${req.get('origin')}/auth/reset-password/${user.resetToken}`;
 
         // send mail
         let body = {
             data: {
                 link,
-                name: user.name,
+                name: fullName,
                 title: "RESET PASSWORD"
             },
             recipient: user.email,
@@ -99,7 +102,7 @@ userAuth.forgotPassword = catchAsync(async (req, res, next) => {
         // send response
         res.status(200).send({
             status: "success",
-            message: "Password Reset Successful! Please Check Your Email For A Link To Change Your Password!"
+            message: `Hello ${fullName}, Password Reset Successful! Please Check Your Email For A Link To Change Your Password!`
         });
     }
 });

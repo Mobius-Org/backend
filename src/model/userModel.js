@@ -2,6 +2,13 @@ const jwt               = require("../services/jwt");
 const crypto            = require("../services/crypto");
 const { Schema, model } = require("mongoose");
 
+// prototype to convert strings to title
+String.prototype.toTitleCase = function(){
+  return this.toLowerCase().split(' ').map(function(word) {
+    return (word.charAt(0).toUpperCase() + word.slice(1));
+  }).join(' ');
+}
+
 
 const reqStr = {
   type: String,
@@ -158,5 +165,11 @@ userSchema.methods.setScore = function(id, score) {
 userSchema.methods.setProgress = function(id, currSection) {
   this.enrolledCourse.filter(course => course.id === id).progress = currSection;
 };
+
+// Get Name
+userSchema.methods.getFullName = function(){
+  return this.name.toTitleCase();
+};
+
 
 module.exports = model("User", userSchema);
