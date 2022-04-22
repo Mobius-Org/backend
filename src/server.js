@@ -1,4 +1,3 @@
-const gameModel = require("./model/gameModel");
 const http = require("http");
 require("dotenv").config();
 
