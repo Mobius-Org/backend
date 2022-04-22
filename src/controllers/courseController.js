@@ -5,6 +5,7 @@ const catchAsync     = require("../utils/catchAsync");
 const handlerFactory = require("../utils/handlerFactory");
 const { cloudUpload } = require("..//utils/cloudinary");
 const upload = require("../utils/multer");
+const courseModel = require("../model/courseModel");
 
 const course = {};
 
@@ -47,38 +48,38 @@ course.create = catchAsync(async (req, res, next) => {
   if (!new_course) return next(new AppError("Could Not Creat Course!", 403));
 
   //send a response
-  res.status(200).send({
+  res.status(201).send({
     message: "Course Created Successfully!",
   });
 });
 
 //see all courses MO B-17
 course.getAllCourses = catchAsync(async (req, res, next) => {
-  const course = await Course.find({});
-  if (!course) {
+  const courses = await Course.find({});
+  if (!courses) {
     return next(new AppError(`Could not GET all courses`, 404));
   }
 
   //send a response
   res.status(200).send({
-    message: `All courses `,
-    data: { course },
+    status: "status",
+    data: courses,
   });
 });
 
 //get a course by id
 course.getOneCourse = catchAsync(async (req, res, next) => {
   //find course thru _id
-  const _id = req.params.id;
+  const courseId = req.params.id;
   //console.log(_id);
 
-  let lesson = await handlerFactory.getById(Course, _id);
-  if (!lesson) return next(new AppError("Course not found", 404));
+  let course = await courseModel.findOne({ courseId });
+  if (!course) return next(new AppError("Course not found", 404));
 
   //send response
   res.status(200).send({
-    message: `Course ${lesson.course} found`,
-    data: { lesson },
+    status: "success",
+    course
   });
 });
 
