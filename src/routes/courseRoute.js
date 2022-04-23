@@ -11,8 +11,8 @@ router.post(
 );
 
 //create content
-router.post(
-  "/newContent",
+router.patch(
+  "/addContent",
   courseController.upload,
   courseController.createContent
 );

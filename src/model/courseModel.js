@@ -23,7 +23,6 @@ const courseSchema = new Schema(
           title: String,
           transcript: String,
           video: String,
-          text: String,
           description: String,
           duration: String
         },
@@ -44,7 +43,10 @@ const courseSchema = new Schema(
       shortSummary: reqStr,
       summary: reqStr,
       age: reqStr,
-      duration: String,
+      duration: {
+        type: String,
+        default: "0:0"
+      },
       modules: {
         type: Number,
         default: 3
@@ -94,9 +96,18 @@ courseSchema.methods.addDescription = function (descr) {
   this.description = descr;
 };
 
-// Add Course Contents
+// // Add Course Contents
 courseSchema.methods.addContents = function (content) {
-    this.description.duration = Number(this.description.duration) + Number(content.duration);
+    let cTime = content.duration.split(':'),
+        dTime = this.description.duration.split(':'),
+        cTimeMins = Number(cTime[0]),
+        cTimeSecs = Number(cTime[1]),
+        dTimeSecs = Number(dTime[1]),
+        tsecs = dTimeSecs + cTimeSecs,
+        dTimeMins = Number(dTime[0]) + cTimeMins + Math.floor(tsecs / 60);
+    dTimeSecs = tsecs % 60;
+    
+    this.description.duration = String(dTimeMins) + ":" + String(dTimeSecs);
     this.description.modules ++;
     this.sections.contents.push(content);
 };

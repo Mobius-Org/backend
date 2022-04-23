@@ -1,10 +1,10 @@
-const fs              = require("fs");
-const User            = require("../model/userModel");
-const upload          = require("../middlewares/multer");
-const Course          = require("../model/courseModel");
-const AppError        = require("../errors/appError");
-const catchAsync      = require("../utils/catchAsync");
-const handlerFactory  = require("../utils/handlerFactory");
+const fs = require("fs");
+const User = require("../model/userModel");
+const upload = require("../middlewares/multer");
+const Course = require("../model/courseModel");
+const AppError = require("../errors/appError");
+const catchAsync = require("../utils/catchAsync");
+const handlerFactory = require("../utils/handlerFactory");
 const { cloudUpload } = require("../utils/cloudinary");
 
 const courseController = {};
@@ -15,7 +15,7 @@ courseController.upload = upload.array("files", 3);
 //create a course
 courseController.createCourse = catchAsync(async (req, res, next) => {
   let { courseName, introduction, studentCreation, description, game } = req.body;
-        //courseName = JSON.parse(courseName);
+  //courseName = JSON.parse(courseName);
 
   const courseExist = await Course.exists({ courseName });
   if (courseExist) return next(new AppError("Course already Exists", 400));
@@ -39,11 +39,11 @@ courseController.createCourse = catchAsync(async (req, res, next) => {
   let media = [], urls = [];
   if (req.files) {
     const files = req.files;
-      media = files.map(file => file.path);
+    media = files.map(file => file.path);
   };
-  for (let i=0; i<media.length; i++){
+  for (let i = 0; i < media.length; i++) {
     let path = media[i],
-        url = await cloudUpload(path);
+      url = await cloudUpload(path);
 
     if (!url) {
       fs.unlinkSync(path);
@@ -52,7 +52,7 @@ courseController.createCourse = catchAsync(async (req, res, next) => {
     fs.unlinkSync(path);
     urls.push(url);
   };
-  
+
   // Add the images and videos
   description = JSON.parse(description);
   introduction = JSON.parse(introduction);
@@ -87,21 +87,30 @@ courseController.createCourse = catchAsync(async (req, res, next) => {
 
 //create new content
 courseController.createContent = catchAsync(async (req, res, next) => {
-  const { courseId, content } = req.body;
+  let { courseId, content } = req.body;
 
   // check if a course exists
-  const course = await Course.exists({ courseId });
-  if (course) return next(new AppError("Course not found", 404));
+  const course = await Course.findOne({ courseId });
+  if (!course) return next(new AppError("Course not found", 404));
 
   // get video for content
-  let video;
-  video = getFile(req, video);
+  let videoUrl;
+  if (req.files) {
+    const path = req.files[0].path;
+    videoUrl = await cloudUpload(path);
+
+    if (!videoUrl) {
+      fs.unlinkSync(path);
+      return next(new AppError("Network Error!", 503));
+    }
+    fs.unlinkSync(path);
+  };
 
   content = JSON.parse(content);
-  content.video = video.url;
+  content.video = videoUrl.url;
 
   // add content to course
-  course.addContents([content]);
+  course.addContents(content);
 
   //save the schema
   await course.save((err, result) => {
@@ -111,7 +120,7 @@ courseController.createContent = catchAsync(async (req, res, next) => {
       );
     else {
       //send a response
-      res.status(200).send({
+      res.status(201).send({
         status: "success",
         message: "Course Content Added Successfully!",
       });
@@ -198,11 +207,11 @@ courseController.uploadContent = catchAsync(async (req, res, next) => {
   let media = [], media1 = []
   if (req.files) {
     const files = req.files;
-      media = files.map(file => file.path);
+    media = files.map(file => file.path);
     //files.forEach((path) => cloudUpload(path));
   };
   console.log(media)
-  for (let i=0; i<media.length; i++){
+  for (let i = 0; i < media.length; i++) {
     let path = media[i]
     console.log("herr")
     let img = await cloudUpload(path);
