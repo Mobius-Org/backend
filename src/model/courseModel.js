@@ -24,6 +24,8 @@ const courseSchema = new Schema(
           transcript: String,
           video: String,
           text: String,
+          description: String,
+          duration: String
         },
       ],
       game: {
@@ -39,7 +41,19 @@ const courseSchema = new Schema(
     },
     description: {
       price: reqStr,
+      shortSummary: reqStr,
       summary: reqStr,
+      age: reqStr,
+      duration: String,
+      modules: {
+        type: Number,
+        default: 3
+      },
+      languges: String,
+      badges: {
+        type: String,
+        default: "Yes"
+      },
       image: String,
       studentEnrolled: [
         {
@@ -81,8 +95,10 @@ courseSchema.methods.addDescription = function (descr) {
 };
 
 // Add Course Contents
-courseSchema.methods.addContents = function (contentsArr) {
-    this.sections.contents = [ ...this.sections.contents, ...contentsArr ];
+courseSchema.methods.addContents = function (content) {
+    this.description.duration = Number(this.description.duration) + Number(content.duration);
+    this.description.modules ++;
+    this.sections.contents.push(content);
 };
 
 // Create Review

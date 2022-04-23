@@ -6,14 +6,14 @@ const { auth } = require("../middlewares/auth");
 router.post(
   "/createCourse",
   // auth,
-  courseController.uploadImage,
+  courseController.upload,
   courseController.createCourse
 );
 
 //create content
 router.post(
-  "/newcontent",
-  courseController.uploadImage,
+  "/newContent",
+  courseController.upload,
   courseController.createContent
 );
 //get all courses
@@ -26,8 +26,14 @@ router.patch("/:id", auth, courseController.enrollCourse);
 // upload content video :id ==> id of the course in question
 router.post(
   "/:id",
-  courseController.uploadImage,
+  courseController.upload,
   courseController.uploadContent
 );
+
+router.post(
+  "/test",
+  courseController.upload,
+  courseController.uploadContent
+)
 
 module.exports = router;
