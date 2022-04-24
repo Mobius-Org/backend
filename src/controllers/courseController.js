@@ -167,82 +167,34 @@ courseController.getOneCourse = catchAsync(async (req, res, next) => {
 
 courseController.enrollCourse = catchAsync(async (req, res, next) => {
   //find course by  id
-  const _id = req.params.id;
-  //console.log(_id);
+  const id = req.params.id;
 
-  let lesson = await handlerFactory.getById(Course, _id);
-  if (!lesson) return next(new AppError("Course not found", 404));
+  let course = await Course.findOne({ id });
+  if (!course) return next(new AppError(`Course with id: ${id} not found`, 404));
 
   //find user
-  //console.log(req.USER_ID); // => undefined
-  let user = await handlerFactory.getById(User, req.USER_ID);
-  if (!user) return next(new AppError("User not found", 404));
+  let user = await User.findById({ _id: req.USER_ID });
+  if (!user) return next(new AppError("Authorization Failed", 401));
 
   //check if course is free
-  if (lesson.description.price === 0.0) {
+  if (course.description.price === "Free") {
     // change course data by adding a new enrolled student
-    lesson.description.student_enrolled.push(req.USER_ID);
+    course.enroll(req.USER_ID);
+    await course.save();
     //add course to a students data
-    user.enrolledCourse.push({ _id });
-    user.save();
+    user.enroll(course.courseId, course._id);
+  } else {
+    // Payment
+  };
 
+  user.save((err, _) => {
+    if (err) return next(new AppError("Could Not Enroll User, Something Went Wrong", 400));
     //send response
     res.status(200).send({
-      message: `Student successfully enrolled in ${lesson.course}`,
-      data: lesson.description.student_enrolled,
+      status: "success",
+      message: `Successfully enroled in course: ${course.CourseName}`
     });
-  }
-});
-
-// upload content
-courseController.uploadContent = catchAsync(async (req, res, next) => {
-  // find course in question with _id
-  // const _id = req.params.id;
-
-  // let lesson = await handlerFactory.getById(Course, _id);
-  // if (!lesson) return next(new AppError("Course not found", 404));
-
-  //cloudinary
-
-  let media = [], media1 = []
-  if (req.files) {
-    const files = req.files;
-    media = files.map(file => file.path);
-    //files.forEach((path) => cloudUpload(path));
-  };
-  console.log(media)
-  for (let i = 0; i < media.length; i++) {
-    let path = media[i]
-    console.log("herr")
-    let img = await cloudUpload(path);
-    console.log(img);
-
-    if (!img) {
-      console.log("here")
-      fs.unlinkSync(path);
-      return next(new AppError("Network Error!", 503));
-    }
-    fs.unlinkSync(path);
-    media1.push(img);
-  }
-  console.log(media1)
-
-  res.status(200).send({ message: "Course video updated successfully" });
-
-  //const result = await cloudUpload(req.file.path);
-  // res.send(result);
-
-  //const {} = req.body;
-
-  //save new content uploaded
-  //const newCourse = await new Course({}).save();
-
-  //if (!newCourse) return next(new AppError("Could Not Upload Content", 403));
-
-  //send a response
-  // res.status(200).send({
-  //   message: "Content Uploaded Successfully!",
-  //});
+  });
 });
 
 module.exports = courseController;
