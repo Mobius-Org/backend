@@ -36,9 +36,9 @@ app.use((req, res, next) => {
 app.use(morgan("dev"));
 
 //ROUTES
-app.use('/api/v1/auth', require('./routes/authRoute'));
-app.use('/api/v1/google', require('./routes/googleAuthRoute'));
-app.use('/api/v1/courses', require('./routes/courseRoute'));
+app.use("/api/v1/auth", require("./routes/authRoute"));
+app.use("/api/v1/google", require("./routes/googleAuthRoute"));
+app.use("/api/v1/courses", require("./routes/courseRoute"));
 
 app.get("/", (req, res) => {
   res.status(200).send("Welcome To The Home Of MOBIUS Api!");
