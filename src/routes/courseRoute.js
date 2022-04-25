@@ -17,23 +17,24 @@ router.patch(
   courseController.createContent
 );
 //get all courses
-router.get("/all", courseController.getAllCourses);
-//get one course
-router.get("/:id", courseController.getOneCourse);
-//post user being enrolled     /first id is the course in question while the second id is tht if the user being enrolled
-router.patch("/enroll/:id", auth, courseController.enrollCourse);
-
-// upload content video :id ==> id of the course in question
-router.post(
-  "/:id",
-  courseController.upload,
-  courseController.uploadContent
+router.get(
+    "/all",
+    courseController.getAllCourses
 );
 
-router.post(
-  "/test",
-  courseController.upload,
-  courseController.uploadContent
-)
+//get one course
+router.get(
+    "/:id",
+    courseController.getOneCourse
+);
+
+
+//post user being enrolled     /first id is the course in question while the second id is tht if the user being enrolled
+router.patch(
+    "/enroll/:id",
+    auth,
+    courseController.enrollCourse
+);
+
 
 module.exports = router;
