@@ -155,7 +155,7 @@ courseController.getOneCourse = catchAsync(async (req, res, next) => {
   const courseId = req.params.id;
   //console.log(_id);
 
-  let course = await courseModel.findOne({ courseId });
+  let course = await Course.findOne({ courseId });
   if (!course) return next(new AppError("Course not found", 404));
 
   //send response
