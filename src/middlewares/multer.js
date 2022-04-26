@@ -3,7 +3,12 @@ const path = require("path");
 
 //multer config
 module.exports = multer({
-  storage: multer.diskStorage({}),
+  storage: multer.diskStorage({
+    filename: (req, file, cb) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+      cb(null, file.fieldname + '-' + uniqueSuffix + '-' + file.originalname.split(path.extname(file.originalname))[0])
+    }
+  }),
   fileFilter: (req, file, cb) => {
     let ext = path.extname(file.originalname);
     if (
@@ -14,7 +19,7 @@ module.exports = multer({
       ext !== ".jpeg" &&
       ext !== ".png"
     ) {
-      cb(new Error("File type is not supported"), false);
+      cb(new Error(`File type with name: ${file.originalname} has an unsupported extension: ${ext}`), false);
       return;
     }
     cb(null, true);

@@ -1,21 +1,21 @@
-const fs              = require("fs");
-const User            = require("../model/userModel");
-const upload          = require("../utils/multer");
-const Course          = require("../model/courseModel");
-const AppError        = require("../errors/appError");
-const catchAsync      = require("../utils/catchAsync");
-const handlerFactory  = require("../utils/handlerFactory");
+const fs = require("fs");
+const User = require("../model/userModel");
+const upload = require("../middlewares/multer");
+const Course = require("../model/courseModel");
+const AppError = require("../errors/appError");
+const catchAsync = require("../utils/catchAsync");
+const handlerFactory = require("../utils/handlerFactory");
 const { cloudUpload } = require("../utils/cloudinary");
 
 const courseController = {};
 
-//multer
-courseController.uploadImage = upload.array("files", 6);
+// multer
+courseController.upload = upload.array("files", 3);
 
 //create a course
 courseController.createCourse = catchAsync(async (req, res, next) => {
-  let { courseName, introduction, studentCreation, description, game } =
-    req.body;
+  let { courseName, introduction, studentCreation, description, game } = req.body;
+  //courseName = JSON.parse(courseName);
 
   const courseExist = await Course.exists({ courseName });
   if (courseExist) return next(new AppError("Course already Exists", 400));
@@ -35,28 +35,38 @@ courseController.createCourse = catchAsync(async (req, res, next) => {
     courseName,
   });
 
-  // add image to course description
-  let img;
+  // get image and videos for
+  let media = [], urls = [];
   if (req.files) {
-    const files = req.files,
-      path = files[0].path;
-    img = await cloudUpload(path);
+    const files = req.files;
+    media = files.map(file => file.path);
+  };
+  for (let i = 0; i < media.length; i++) {
+    let path = media[i],
+      url = await cloudUpload(path);
 
-    if (!img) {
+    if (!url) {
       fs.unlinkSync(path);
       return next(new AppError("Network Error!", 503));
     }
     fs.unlinkSync(path);
-  } else return next(new AppError("Image Upload Failed!", 400));
+    urls.push(url);
+  };
 
+  // Add the images and videos
   description = JSON.parse(description);
-  description.image = img.url;
+  introduction = JSON.parse(introduction);
+  studentCreation = JSON.parse(studentCreation);
+  introduction.video = urls[0].url;
+  studentCreation.video = urls[1].url;
+  description.image = urls[2].url;
+
 
   //instance methods
   newCourse.addSections(
-    JSON.parse(introduction),
-    JSON.parse(game),
-    JSON.parse(studentCreation)
+    introduction,
+    game,
+    studentCreation
   );
   newCourse.addDescription(description);
 
@@ -64,58 +74,69 @@ courseController.createCourse = catchAsync(async (req, res, next) => {
   await newCourse.save((err, result) => {
     if (err)
       return next(
-        new AppError({ status: "failed", message: err.message }, 400)
-      );
+        new AppError({ message: err.message }, 400));
     else {
       //send a response
-      res.status(200).send({
+      res.status(201).send({
         message: "Course Created Successfully!",
       });
     }
   });
-  if (!newCourse) return next(new AppError("Could Not Create Course!", 403));
 });
+
 
 //create new content
 courseController.createContent = catchAsync(async (req, res, next) => {
-  const { courseId } = req.body;
+  let { courseId, content } = req.body;
 
-  //if a course is not found send an error
-  const course = await Course.exists({ courseId });
-  if (course) return next(new AppError("Course not found", 404));
+  // check if a course exists
+  const course = await Course.findOne({ courseId });
+  if (!course) return next(new AppError("Course not found", 404));
 
-  //create content Array
-  const contentsArr = [];
+  // get video for content
+  let videoUrl;
+  if (req.files) {
+    const path = req.files[0].path;
+    videoUrl = await cloudUpload(path);
 
-  //save new Content
-  const newContent = {
-    title: title,
-    transcript: transcript,
-    video: video,
-    text: text,
+    if (!videoUrl) {
+      fs.unlinkSync(path);
+      return next(new AppError("Network Error!", 503));
+    }
+    fs.unlinkSync(path);
   };
-  //instance methods
-  course.addContents(contentsArr);
+
+  content = JSON.parse(content);
+  content.video = videoUrl.url;
+
+  // add content to course
+  course.addContents(content);
 
   //save the schema
-  await newCourse.save((err, result) => {
+  await course.save((err, result) => {
     if (err)
       return next(
-        new AppError({ status: "failed", message: err.message }, 400)
+        new AppError({ message: err.message }, 400)
       );
     else {
       //send a response
-      res.status(200).send({
+      res.status(201).send({
         status: "success",
-        message: "Course Created Successfully!",
+        message: "Course Content Added Successfully!",
       });
     }
   });
-  if (!newCourse) return next(new AppError("Could Not Create Course!", 403));
 });
 
+
+
+
+
+
+
+
 //see all courses MO B-17
-course.getAllCourses = catchAsync(async (req, res, next) => {
+courseController.getAllCourses = catchAsync(async (req, res, next) => {
   const courses = await Course.find({});
   if (!courses) {
     return next(new AppError(`Could not GET all courses`, 404));
@@ -134,7 +155,7 @@ courseController.getOneCourse = catchAsync(async (req, res, next) => {
   const courseId = req.params.id;
   //console.log(_id);
 
-  let course = await courseModel.findOne({ courseId });
+  let course = await Course.findOne({ courseId });
   if (!course) return next(new AppError("Course not found", 404));
 
   //send response
@@ -146,64 +167,34 @@ courseController.getOneCourse = catchAsync(async (req, res, next) => {
 
 courseController.enrollCourse = catchAsync(async (req, res, next) => {
   //find course by  id
-  const _id = req.params.id;
-  //console.log(_id);
+  const id = req.params.id;
 
-  let lesson = await handlerFactory.getById(Course, _id);
-  if (!lesson) return next(new AppError("Course not found", 404));
+  let course = await Course.findOne({ id });
+  if (!course) return next(new AppError(`Course with id: ${id} not found`, 404));
 
   //find user
-  //console.log(req.USER_ID); // => undefined
-  let user = await handlerFactory.getById(User, req.USER_ID);
-  if (!user) return next(new AppError("User not found", 404));
+  let user = await User.findById({ _id: req.USER_ID });
+  if (!user) return next(new AppError("Authorization Failed", 401));
 
   //check if course is free
-  if (lesson.description.price === 0.0) {
+  if (course.description.price === "Free") {
     // change course data by adding a new enrolled student
-    lesson.description.student_enrolled.push(req.USER_ID);
+    course.enroll(req.USER_ID);
+    await course.save();
     //add course to a students data
-    user.enrolledCourse.push({ _id });
-    user.save();
+    user.enroll(course.courseId, course._id);
+  } else {
+    // Payment
+  };
 
+  user.save((err, _) => {
+    if (err) return next(new AppError("Could Not Enroll User, Something Went Wrong", 400));
     //send response
     res.status(200).send({
-      message: `Student successfully enrolled in ${lesson.course}`,
-      data: lesson.description.student_enrolled,
+      status: "success",
+      message: `Successfully enroled in course: ${course.CourseName}`
     });
-  }
-});
-
-// upload content
-courseController.uploadContent = catchAsync(async (req, res, next) => {
-  // find course in question with _id
-  // const _id = req.params.id;
-
-  // let lesson = await handlerFactory.getById(Course, _id);
-  // if (!lesson) return next(new AppError("Course not found", 404));
-
-  //cloudinary
-
-  if (req.files) {
-    const files = req.files;
-    files.forEach((path) => cloudUpload(path));
-  }
-
-  res.status(200).send({ message: "Course video updated successfully" });
-
-  //const result = await cloudUpload(req.file.path);
-  // res.send(result);
-
-  //const {} = req.body;
-
-  //save new content uploaded
-  //const newCourse = await new Course({}).save();
-
-  //if (!newCourse) return next(new AppError("Could Not Upload Content", 403));
-
-  //send a response
-  // res.status(200).send({
-  //   message: "Content Uploaded Successfully!",
-  //});
+  });
 });
 
 module.exports = courseController;

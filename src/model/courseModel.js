@@ -23,7 +23,8 @@ const courseSchema = new Schema(
           title: String,
           transcript: String,
           video: String,
-          text: String,
+          description: String,
+          duration: String
         },
       ],
       game: {
@@ -39,7 +40,22 @@ const courseSchema = new Schema(
     },
     description: {
       price: reqStr,
+      shortSummary: reqStr,
       summary: reqStr,
+      age: reqStr,
+      duration: {
+        type: String,
+        default: "0:0"
+      },
+      modules: {
+        type: Number,
+        default: 3
+      },
+      languges: String,
+      badges: {
+        type: String,
+        default: "Yes"
+      },
       image: String,
       studentEnrolled: [
         {
@@ -80,9 +96,20 @@ courseSchema.methods.addDescription = function (descr) {
   this.description = descr;
 };
 
-// Add Course Contents
-courseSchema.methods.addContents = function (contentsArr) {
-    this.sections.contents = [ ...this.sections.contents, ...contentsArr ];
+// // Add Course Contents
+courseSchema.methods.addContents = function (content) {
+    let cTime = content.duration.split(':'),
+        dTime = this.description.duration.split(':'),
+        cTimeMins = Number(cTime[0]),
+        cTimeSecs = Number(cTime[1]),
+        dTimeSecs = Number(dTime[1]),
+        tsecs = dTimeSecs + cTimeSecs,
+        dTimeMins = Number(dTime[0]) + cTimeMins + Math.floor(tsecs / 60);
+    dTimeSecs = tsecs % 60;
+    
+    this.description.duration = String(dTimeMins) + ":" + String(dTimeSecs);
+    this.description.modules ++;
+    this.sections.contents.push(content);
 };
 
 // Create Review
