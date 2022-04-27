@@ -28,7 +28,9 @@ payment.initalizeTransaction = async (paramObj, response) => {
             data = JSON.parse(data);
             console.log(data)
             console.log(data.data.authorization_url);
-            response.redirect(data.data.authorization_url);
+            response.send({
+                redirectUrl: data.data.authorization_url
+            });
         })
     }).on('error', error => {
         console.error(error)
