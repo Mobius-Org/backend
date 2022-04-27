@@ -152,9 +152,9 @@ courseController.getOneCourse = catchAsync(async (req, res, next) => {
 
 courseController.enrollCourse = catchAsync(async (req, res, next) => {
   //find course by  id
-  const id = req.params.id;
+  const courseId = req.params.id;
 
-  let course = await Course.findOne({ id });
+  let course = await Course.findOne({ courseId });
   if (!course)
     return next(new AppError(`Course with id: ${id} not found`, 404));
 
@@ -196,7 +196,7 @@ courseController.enrollCourse = catchAsync(async (req, res, next) => {
     amount = String(Number(amount)*100);
 
     let paystackData = await payment.initalizeTransaction({ email, amount });
-    console.log(paystackData)
+    console.log(paystackData);
     res.redirect(paystackData.authorization_url);
   }
 });
