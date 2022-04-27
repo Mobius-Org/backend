@@ -150,6 +150,7 @@ courseController.getOneCourse = catchAsync(async (req, res, next) => {
   });
 });
 
+// enroll in a course
 courseController.enrollCourse = catchAsync(async (req, res, next) => {
   //find course by  id
   const courseId = req.params.id;
@@ -195,10 +196,8 @@ courseController.enrollCourse = catchAsync(async (req, res, next) => {
     });
     amount = String(Number(amount)*100);
 
-    let paystackData = await payment.initalizeTransaction({ email, amount }, res);
-    // console.log(paystackData);
-    // res.redirect(paystackData.authorization_url);
-  }
+    payment.initalizeTransaction({ email, amount }, newPayment, res);
+  };
 });
 
 courseController.getMyCourses = catchAsync(async (req, res, next) => {

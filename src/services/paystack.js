@@ -2,7 +2,7 @@ const https   = require('https');
 
 const payment = {};
 
-payment.initalizeTransaction = async (paramObj, response) => {
+payment.initalizeTransaction = async (paramObj, paymentModel, response) => {
     // stringify the parameters from client
     const params = JSON.stringify(paramObj);
 
@@ -26,10 +26,13 @@ payment.initalizeTransaction = async (paramObj, response) => {
         });
         res.on('end', () => {
             data = JSON.parse(data);
-            console.log(data)
-            console.log(data.data.authorization_url);
-            response.send({
-                redirectUrl: data.data.authorization_url
+            paymentModel.refrence = data.data?.refrence;
+            await paymentModel.save();
+            
+            response.status(201).send({
+                status: data.status,
+                message: data.message,
+                redirectUrl: data.data?.authorization_url
             });
         })
     }).on('error', error => {
