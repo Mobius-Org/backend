@@ -14,7 +14,8 @@ courseController.upload = upload.array("files", 3);
 
 //create a course
 courseController.createCourse = catchAsync(async (req, res, next) => {
-  let { courseName, introduction, studentCreation, description, game } = req.body;
+  let { courseName, introduction, studentCreation, description, game } =
+    req.body;
   //courseName = JSON.parse(courseName);
 
   const courseExist = await Course.exists({ courseName });
@@ -36,11 +37,12 @@ courseController.createCourse = catchAsync(async (req, res, next) => {
   });
 
   // get image and videos for
-  let media = [], urls = [];
+  let media = [],
+    urls = [];
   if (req.files) {
     const files = req.files;
-    media = files.map(file => file.path);
-  };
+    media = files.map((file) => file.path);
+  }
   for (let i = 0; i < media.length; i++) {
     let path = media[i],
       url = await cloudUpload(path);
@@ -51,7 +53,7 @@ courseController.createCourse = catchAsync(async (req, res, next) => {
     }
     fs.unlinkSync(path);
     urls.push(url);
-  };
+  }
 
   // Add the images and videos
   description = JSON.parse(description);
@@ -61,20 +63,13 @@ courseController.createCourse = catchAsync(async (req, res, next) => {
   studentCreation.video = urls[1].url;
   description.image = urls[2].url;
 
-
   //instance methods
-  newCourse.addSections(
-    introduction,
-    game,
-    studentCreation
-  );
+  newCourse.addSections(introduction, game, studentCreation);
   newCourse.addDescription(description);
 
   //save the schema
   await newCourse.save((err, result) => {
-    if (err)
-      return next(
-        new AppError({ message: err.message }, 400));
+    if (err) return next(new AppError({ message: err.message }, 400));
     else {
       //send a response
       res.status(201).send({
@@ -83,7 +78,6 @@ courseController.createCourse = catchAsync(async (req, res, next) => {
     }
   });
 });
-
 
 //create new content
 courseController.createContent = catchAsync(async (req, res, next) => {
@@ -104,7 +98,7 @@ courseController.createContent = catchAsync(async (req, res, next) => {
       return next(new AppError("Network Error!", 503));
     }
     fs.unlinkSync(path);
-  };
+  }
 
   content = JSON.parse(content);
   content.video = videoUrl.url;
@@ -114,10 +108,7 @@ courseController.createContent = catchAsync(async (req, res, next) => {
 
   //save the schema
   await course.save((err, result) => {
-    if (err)
-      return next(
-        new AppError({ message: err.message }, 400)
-      );
+    if (err) return next(new AppError({ message: err.message }, 400));
     else {
       //send a response
       res.status(201).send({
@@ -127,13 +118,6 @@ courseController.createContent = catchAsync(async (req, res, next) => {
     }
   });
 });
-
-
-
-
-
-
-
 
 //see all courses MO B-17
 courseController.getAllCourses = catchAsync(async (req, res, next) => {
@@ -161,7 +145,7 @@ courseController.getOneCourse = catchAsync(async (req, res, next) => {
   //send response
   res.status(200).send({
     status: "success",
-    course
+    course,
   });
 });
 
@@ -170,7 +154,8 @@ courseController.enrollCourse = catchAsync(async (req, res, next) => {
   const id = req.params.id;
 
   let course = await Course.findOne({ id });
-  if (!course) return next(new AppError(`Course with id: ${id} not found`, 404));
+  if (!course)
+    return next(new AppError(`Course with id: ${id} not found`, 404));
 
   //find user
   let user = await User.findById({ _id: req.USER_ID });
@@ -185,16 +170,34 @@ courseController.enrollCourse = catchAsync(async (req, res, next) => {
     user.enroll(course.courseId, course._id);
   } else {
     // Payment
-  };
+  }
 
   user.save((err, _) => {
-    if (err) return next(new AppError("Could Not Enroll User, Something Went Wrong", 400));
+    if (err)
+      return next(
+        new AppError("Could Not Enroll User, Something Went Wrong", 400)
+      );
     //send response
     res.status(200).send({
       status: "success",
-      message: `Successfully enroled in course: ${course.CourseName}`
+      message: `Successfully enrolled in course: ${course.courseName}`,
     });
   });
+});
+
+courseController.getMyCourses = catchAsync(async (req, res, next) => {
+  //find user
+  User.findById({ _id: req.USER_ID })
+    .populate({ path: "enrolledCourses" }).then(result => {
+      if (!result) return next(new AppError("Could not get my courses", 400));
+      //send response
+      else {
+        res.status(200).send({
+          status: "success",
+          result: result.enrolledCourses
+        });
+      }
+    });
 });
 
 module.exports = courseController;
