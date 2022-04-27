@@ -153,7 +153,7 @@ courseController.enrollCourse = catchAsync(async (req, res, next) => {
   //find course by  id
   const id = req.params.id;
 
-  let course = await Course.findOne({ id });
+  let course = await Course.findOne({ courseId: id });
   if (!course)
     return next(new AppError(`Course with id: ${id} not found`, 404));
 
@@ -168,22 +168,20 @@ courseController.enrollCourse = catchAsync(async (req, res, next) => {
     await course.save();
     //add course to a students data
     user.enroll(course.courseId, course._id);
-    user.save((err, _) => {
-      if (err)
-        return next(
-          new AppError("Could Not Enroll User, Something Went Wrong", 400)
-        );
-      //send response
-      res.status(200).send({
-        status: "success",
-        message: `Successfully enrolled in course: ${course.courseName}`,
-      });
-    });
   } else {
     // Payment
   }
-
-  
+  user.save((err, _) => {
+    if (err)
+      return next(
+        new AppError("Could Not Enroll User, Something Went Wrong", 400)
+      );
+    //send response
+    res.status(200).send({
+      status: "success",
+      message: `Successfully enrolled in course: ${course.courseName}`,
+    });
+  });
 });
 
 courseController.getMyCourses = catchAsync(async (req, res, next) => {
