@@ -154,7 +154,7 @@ courseController.enrollCourse = catchAsync(async (req, res, next) => {
   //find course by  id
   const courseId = req.params.id;
 
-  let course = await Course.findOne({ courseId });
+  let course = await Course.findOne({ courseId: id });
   if (!course)
     return next(new AppError(`Course with id: ${id} not found`, 404));
 
