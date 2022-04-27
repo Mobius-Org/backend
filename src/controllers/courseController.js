@@ -195,9 +195,9 @@ courseController.enrollCourse = catchAsync(async (req, res, next) => {
     });
     amount = String(Number(amount)*100);
 
-    let paystackData = await payment.initalizeTransaction({ email, amount });
-    console.log(paystackData);
-    res.redirect(paystackData.authorization_url);
+    let paystackData = await payment.initalizeTransaction({ email, amount }, res);
+    // console.log(paystackData);
+    // res.redirect(paystackData.authorization_url);
   }
 });
 

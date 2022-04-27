@@ -2,7 +2,7 @@ const https   = require('https');
 
 const payment = {};
 
-payment.initalizeTransaction = async (paramObj) => {
+payment.initalizeTransaction = async (paramObj, response) => {
     // stringify the parameters from client
     const params = JSON.stringify(paramObj);
 
@@ -19,7 +19,6 @@ payment.initalizeTransaction = async (paramObj) => {
     };
 
     // define request and response
-    let result = '';
     const req = https.request(options, res => {
         let data = ''
         res.on('data', (chunk) => {
@@ -27,14 +26,14 @@ payment.initalizeTransaction = async (paramObj) => {
         });
         res.on('end', () => {
             data = JSON.parse(data);
-            result = data;
+            console.log(data.data.authorization_url);
+            response.redirect(data.data.authorization_url);
         })
     }).on('error', error => {
         console.error(error)
     })
     req.write(params)
-    req.end()
-    return result;
+    req.end();
 };
 
 
