@@ -24,10 +24,9 @@ router.get(
 
 //get one course
 router.get(
-    "/:id",
+    "/getOne/:id",
     courseController.getOneCourse
 );
-
 
 //post user being enrolled     /first id is the course in question while the second id is tht if the user being enrolled
 router.patch(
@@ -36,5 +35,11 @@ router.patch(
     courseController.enrollCourse
 );
 
+//get my courses
+router.get(
+    "/dashboard/myCourses",
+    auth,
+    courseController.getMyCourses
+);
 
 module.exports = router;
