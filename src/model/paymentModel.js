@@ -19,7 +19,7 @@ const paymentSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "course"
   },
-  price: Number,
+  amount: String,
   refrence: String
 });
 

@@ -2,7 +2,7 @@ const https   = require('https');
 
 const payment = {};
 
-payment.initalizeTransaction = (paramObj, paymentModel) => {
+payment.initalizeTransaction = async (paramObj) => {
     // stringify the parameters from client
     const params = JSON.stringify(paramObj);
 
@@ -19,6 +19,7 @@ payment.initalizeTransaction = (paramObj, paymentModel) => {
     };
 
     // define request and response
+    let result = '';
     const req = https.request(options, res => {
         let data = ''
         res.on('data', (chunk) => {
@@ -26,18 +27,14 @@ payment.initalizeTransaction = (paramObj, paymentModel) => {
         });
         res.on('end', () => {
             data = JSON.parse(data);
-            paymentModel.refrence = data.refrence;
-            paymentModel.save((err, result) => {
-                if (err) console.log(err);
-                else if (result) console.log(result);
-            });
-            console.log(data);
+            result = data;
         })
     }).on('error', error => {
         console.error(error)
     })
     req.write(params)
     req.end()
+    return result;
 };
 
 
