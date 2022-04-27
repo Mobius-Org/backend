@@ -29,7 +29,7 @@ router.get(
 );
 
 //post user being enrolled     /first id is the course in question while the second id is tht if the user being enrolled
-router.patch(
+router.post(
     "/enroll/:id",
     auth,
     courseController.enrollCourse
