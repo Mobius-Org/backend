@@ -17,15 +17,29 @@ router.patch(
   courseController.createContent
 );
 //get all courses
-router.get("/all", courseController.getAllCourses);
+router.get(
+    "/all",
+    courseController.getAllCourses
+);
 
 //get one course
-router.get("/getOne/:id", courseController.getOneCourse);
+router.get(
+    "/getOne/:id",
+    courseController.getOneCourse
+);
 
 //post user being enrolled     /first id is the course in question while the second id is tht if the user being enrolled
-router.patch("/enroll/:id", auth, courseController.enrollCourse);
+router.patch(
+    "/enroll/:id",
+    auth,
+    courseController.enrollCourse
+);
 
 //get my courses
-router.get("/myCourses", auth, courseController.getMyCourses);
+router.get(
+    "/dashboard/myCourses",
+    auth,
+    courseController.getMyCourses
+);
 
 module.exports = router;
