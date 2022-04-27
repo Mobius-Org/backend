@@ -27,7 +27,7 @@ payment.initalizeTransaction = async (paramObj, response) => {
         res.on('end', () => {
             data = JSON.parse(data);
             console.log(data)
-            console.log(data.authorization_url);
+            console.log(data.data.authorization_url);
             response.redirect(data.data.authorization_url);
         })
     }).on('error', error => {
