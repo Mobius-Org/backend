@@ -4,7 +4,8 @@ const upload = require("../middlewares/multer");
 const Course = require("../model/courseModel");
 const AppError = require("../errors/appError");
 const catchAsync = require("../utils/catchAsync");
-const handlerFactory = require("../utils/handlerFactory");
+const payment = require('../services/paystack');
+const Payment = require('../model/paymentModel');
 const { cloudUpload } = require("../utils/cloudinary");
 
 const courseController = {};
@@ -151,7 +152,7 @@ courseController.getOneCourse = catchAsync(async (req, res, next) => {
 
 courseController.enrollCourse = catchAsync(async (req, res, next) => {
   //find course by  id
-  const id = req.params.id;
+  const courseId = req.params.id;
 
   let course = await Course.findOne({ courseId: id });
   if (!course)
@@ -168,20 +169,36 @@ courseController.enrollCourse = catchAsync(async (req, res, next) => {
     await course.save();
     //add course to a students data
     user.enroll(course.courseId, course._id);
+
+    // save user and send response to client
+    user.save((err, _) => {
+      if (err)
+        return next(
+          new AppError("Could Not Enroll User, Something Went Wrong", 400)
+        );
+      //send response
+      res.status(200).send({
+        status: "success",
+        message: `Successfully enrolled in course: ${course.courseName}`,
+      });
+    });
   } else {
     // Payment
-  }
-  user.save((err, _) => {
-    if (err)
-      return next(
-        new AppError("Could Not Enroll User, Something Went Wrong", 400)
-      );
-    //send response
-    res.status(200).send({
-      status: "success",
-      message: `Successfully enrolled in course: ${course.courseName}`,
+    let email = user.email,
+        amount = course.description.price;
+      
+    const newPayment = new Payment({
+        user: user._id,
+        email,
+        name: user.getFullName(),
+        amount
     });
-  });
+    amount = String(Number(amount)*100);
+
+    let paystackData = await payment.initalizeTransaction({ email, amount }, res);
+    // console.log(paystackData);
+    // res.redirect(paystackData.authorization_url);
+  }
 });
 
 courseController.getMyCourses = catchAsync(async (req, res, next) => {
