@@ -48,12 +48,13 @@ payment.verify = async (req, response) => {
     const options = {
         hostname: 'api.paystack.co',
         port: 443,
-        path: '/transaction/verify/:' + req.query.refrence,
+        path: '/transaction/verify/' + req.query.refrence,
         method: 'GET',
         headers: {
             Authorization: 'Bearer ' + process.env.PAYSTACK_SECRET_KEY,
         }
     };
+    console.log(options.path);
     https.request(options, res => {
         let data = '';
         res.on('data', (chunk) => {
