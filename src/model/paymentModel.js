@@ -15,10 +15,7 @@ const paymentSchema = new Schema({
     required: true,
     trim: true
   },
-  course: {
-    type: Schema.Types.ObjectId,
-    ref: "course"
-  },
+  courseId: String,
   amount: String,
   refrence: String
 });

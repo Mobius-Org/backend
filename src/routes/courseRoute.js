@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const courseController = require("../controllers/courseController");
 const { auth } = require("../middlewares/auth");
+const payment = require("../services/paystack");
 
 //create course
 router.post(
@@ -40,6 +41,11 @@ router.get(
     "/dashboard/myCourses",
     auth,
     courseController.getMyCourses
+);
+
+router.get(
+    "/enroll/verify-transactions/",
+    payment.verify
 );
 
 module.exports = router;

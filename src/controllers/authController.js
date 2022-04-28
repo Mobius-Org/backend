@@ -10,7 +10,9 @@ const userAuth = {};
 const exclude = {
     lastLoginTime: 0,
     lastLogoutTime: 0,
-    passwordChangedTime: 0,
+    enrolledCourses: 0,
+    passwordChangedAt: 0,
+    enrolledCoursesDetails: 0,
 };
 
 
