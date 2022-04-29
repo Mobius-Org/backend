@@ -25,8 +25,8 @@ exports.decodeResetToken = ( token, userPassword ) => {
 exports.createSendToken = (user, status, res) => {
     let token = user.genJwt();
     let Fname = user.getFullName();
-    user = user.toObject();
     user.token = token;
+    user = user.toObject();
     user.name = Fname;
     delete user.password;
     delete user.lastLogoutTime;

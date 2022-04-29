@@ -91,6 +91,7 @@ const userSchema = new Schema(
       type: Date,
       default: new Date()
     },
+    token: String,
     resetToken: {
       type: String,
       default: ""

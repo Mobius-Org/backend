@@ -10,7 +10,9 @@ const userAuth = {};
 const exclude = {
     lastLoginTime: 0,
     lastLogoutTime: 0,
-    passwordChangedTime: 0,
+    enrolledCourses: 0,
+    passwordChangedAt: 0,
+    enrolledCoursesDetails: 0,
 };
 
 
@@ -37,12 +39,11 @@ userAuth.signup = catchAsync(async (req, res, next) => {
     user.setPassword(password);
     // set details
     user.set({ name, age, email, favColor });
-    await user.save();
-
-    if (!user) return next( new AppError("Could Not Creat User!", 403));
-    
-    // send response
-    jwt.createSendToken(user, 201, res);
+    user.save((err, result) => {
+        if (err) return next(new AppError("Could Not Create User!", 400));
+        // send response
+        jwt.createSendToken(result, 201, res);
+    });
 });
 
 // Login
@@ -61,8 +62,11 @@ userAuth.login = catchAsync(async (req, res, next) => {
     if (user.isValidPassword(password)){
         user.lastLoginTime = new Date();
         user.lastLogoutTime = null;
-        await user.save();
-        jwt.createSendToken(user, 200, res);
+        await user.save((err, result) => {
+            if (err) return next(new AppError("Could Not Create User!", 400));
+            // send response
+            jwt.createSendToken(result, 201, res);
+        });
     } else return next(new AppError("Invalid Email Or Password!", 403));
 });
 
@@ -125,10 +129,13 @@ userAuth.resetPassword = catchAsync(async (req, res, next) => {
     user.setPassword(newPassword);
     user.passwordChangedAt = new Date();
     user.resetToken = "";
-    await user.save()
-    res.status(200).send({
-        status: "success",
-        message: "Password Changed Successfully!"
+    await user.save((err, result) => {
+        if (err) return next(new AppError("Could Not Create User!", 400));
+        // send response
+        res.status(200).send({
+            status: "success",
+            message: "Password Changed Successfully!"
+        });
     });
 });
 

@@ -1,15 +1,23 @@
 const { Schema, model } = require("mongoose");
-const reqStr = {
-  type: String,
-  required: true,
-};
 
-const PaymentSchema = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: "User" },
-  course: { type: Schema.Types.ObjectId, ref: "course" },
-  price: { type: Number }
+const paymentSchema = new Schema({
+  userId: { 
+    type: Schema.Types.ObjectId,
+    ref: "User"
+  },
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  email: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  courseId: String,
+  amount: String,
+  refrence: String
 });
 
-const Payment = model("Payment", PaymentSchema);
-
-module.exports = Payment;
+module.exports = model("Payment", paymentSchema);
