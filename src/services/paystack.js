@@ -63,7 +63,7 @@ payment.verify = (ref, Course, User, Payment, resp) => {
 
             // check verification
             if (data.data.status === 'success') {
-                const { email, amountTrue, userId, name, courseId} = data.data.metadata,
+                const { email, amountTrue, userId, name, courseId } = data.data.metadata,
                     user = await User.findById({ _id: userId }),
                     course = await Course.findOne({ courseId }),
                     newPayment = new Payment(
@@ -78,7 +78,8 @@ payment.verify = (ref, Course, User, Payment, resp) => {
                 // save transaction
                 newPayment.save((err, _) => {
                     if (err) {
-                        resp.status(500).send({
+                        console.log(err);
+                        return resp.status(500).send({
                             status: "failed",
                             message: "Something went wrong, rest assurred, we will fix it right away!"
                         });
@@ -90,10 +91,22 @@ payment.verify = (ref, Course, User, Payment, resp) => {
 
                         // save user and send response to client
                         user.save((err, _) => {
-                            if (err) console.log(err);
+                            if (err) {
+                                console.log(err);
+                                return resp.status(500).send({
+                                    status: "failed",
+                                    message: "Something went wrong, rest assurred, we will fix it right away!"
+                                });
+                            }
                             // save course
                             course.save((err, _) => {
-                                if (err) console.log(error);
+                                if (err) {
+                                    console.log(error);
+                                    return resp.status(500).send({
+                                        status: "failed",
+                                        message: "Something went wrong, rest assurred, we will fix it right away!"
+                                    });
+                                }
                                 //send response
                                 resp.status(200).send({
                                     status: "success",
