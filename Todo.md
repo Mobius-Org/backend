@@ -15,3 +15,7 @@
 - [x] Create Payment Functions
 - [x] Refactor Course Enpoint
 - [x] Refactor Payment Functions
+- [x] Add Endpoint To Update Course Progress
+- [ ] Create Endpoint To Record Game Score
+- [ ] Create Endpoint To Help Students Upload Content
+- [ ] Create Endpoint To Create Certificate
