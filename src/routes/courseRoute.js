@@ -26,6 +26,14 @@ router.get("/getOne/:id", courseController.getOneCourse);
 router.patch("/enroll/:id", auth, courseController.enrollCourse);
 
 //get my courses
-router.get("/myCourses", auth, courseController.getMyCourses);
+router.get("/dashboard/myCourses", auth, courseController.getMyCourses);
+
+// //student upload content
+// router.patch(
+//   "/student/uploadcontent",
+//   auth,
+//   courseController.upload,
+//   courseController.studentUpload
+// );
 
 module.exports = router;

@@ -188,16 +188,57 @@ courseController.enrollCourse = catchAsync(async (req, res, next) => {
 courseController.getMyCourses = catchAsync(async (req, res, next) => {
   //find user
   User.findById({ _id: req.USER_ID })
-    .populate({ path: "enrolledCourses" }).then(result => {
+    .populate({ path: "enrolledCourses" })
+    .then((result) => {
       if (!result) return next(new AppError("Could not get my courses", 400));
       //send response
       else {
         res.status(200).send({
           status: "success",
-          result: result.enrolledCourses
+          result: result.enrolledCourses,
         });
       }
     });
 });
+
+// //student create new content
+// courseController.studentUpload = catchAsync(async (req, res, next) => {
+//   let { courseId, review } = req.body;
+
+//   // check if a course exists
+//   const course = await Course.findOne({ courseId });
+//   if (!course) return next(new AppError("Course not found", 404));
+
+//   // get video for content
+//   let videoUrl;
+//   if (req.files) {
+//     const path = req.files[0].path;
+//     videoUrl = await cloudUpload(path);
+
+//     if (!videoUrl) {
+//       fs.unlinkSync(path);
+//       return next(new AppError("Network Error!", 503));
+//     }
+//     fs.unlinkSync(path);
+//   }
+
+//   review= JSON.parse(review);
+//   //review.video = videoUrl.url;
+
+//   // add review to schema
+//   course.review(review);
+
+//   //save the schema
+//   await course.save((err, result) => {
+//     if (err) return next(new AppError({ message: err.message }, 400));
+//     else {
+//       //send a response
+//       res.status(201).send({
+//         status: "success",
+//         message: "Review sent successfully",
+//       });
+//     }
+//   });
+// });
 
 module.exports = courseController;
