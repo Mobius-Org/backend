@@ -1,11 +1,12 @@
 const router = require("express").Router();
-const courseController = require("../controllers/courseController");
 const { auth } = require("../middlewares/auth");
+const courseController = require("../controllers/courseController");
 
 //create course
 router.post(
   "/createCourse",
-  // auth,
+  auth,
+  // checkAuth,
   courseController.upload,
   courseController.createCourse
 );
@@ -22,18 +23,12 @@ router.get("/all", courseController.getAllCourses);
 //get one course
 router.get("/getOne/:id", courseController.getOneCourse);
 
-//post user being enrolled     /first id is the course in question while the second id is tht if the user being enrolled
-router.patch("/enroll/:id", auth, courseController.enrollCourse);
+//post user being enrolled
+router.post("/enroll/:id", auth, courseController.enrollCourse);
 
 //get my courses
 router.get("/dashboard/myCourses", auth, courseController.getMyCourses);
 
-// //student upload content
-// router.patch(
-//   "/student/uploadcontent",
-//   auth,
-//   courseController.upload,
-//   courseController.studentUpload
-// );
+router.get("/enroll/verify-transactions/", courseController.verify);
 
 module.exports = router;

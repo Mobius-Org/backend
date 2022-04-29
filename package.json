@@ -30,6 +30,7 @@
     "nodemailer": "^6.7.3",
     "nodemailer-juice": "^1.0.1",
     "nodemon": "^2.0.15",
+    "paystack-api": "^2.0.6",
     "pug": "^3.0.2"
   }
 }
