@@ -108,10 +108,11 @@ payment.verify = (ref, Course, User, Payment, resp) => {
                                     });
                                 }
                                 //send response
-                                resp.status(200).send({
-                                    status: "success",
-                                    message: `Successfully enrolled in course: ${course.courseName}`,
-                                });
+                                // resp.status(200).send({
+                                //     status: "success",
+                                //     message: `Successfully enrolled in course: ${course.courseName}`,
+                                // });
+                                resp.redirect("https://mobiusorg.netlify.app/courseDetails/"+course.courseId);
                             });
                         });
                     }
