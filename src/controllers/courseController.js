@@ -161,7 +161,7 @@ courseController.enrollCourse = catchAsync(async (req, res, next) => {
 
   //find user
   let user = await User.findById({ _id: req.USER_ID });
-  if (!user) return next(new AppError("Authorization Failed", 401));
+  if (!user) return next(new AppError("Authorization Failed", 403));
 
   // check if user is already enrolled in course
   if (user.enrolledCourses.includes(course._id)) {
@@ -217,6 +217,7 @@ courseController.verify = catchAsync(async (req, res, next) => {
   const ref = req.query.reference;
   paystack.verify(ref, Course, User, Payment, res);
 });
+
 
 // get courses a user enrolled in
 courseController.getMyCourses = catchAsync(async (req, res, next) => {
