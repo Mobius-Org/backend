@@ -10,7 +10,7 @@ exports.auth = async (req, res, next) => {
   const decoded = jwt.decode(token);
   if (!decoded) return next(new AppError("User Authorization Failed", 403));
 
-  const user = await User?.findOne({ token });
+  const user = await User?.findById({ _id:decoded.id });
   if (!user) return next(new AppError("User Not Logged In!", 401));
 
   req.USER_ID = user?._id || undefined;

@@ -7,4 +7,16 @@
 - [x] Refactor Login With Details
 - [x] Authentication With Google
 - [x] Create Middleware
-- [ ] Forgot Password Endpoint
+- [x] Forgot Password Endpoint
+- [x] Create Cloudinary Functions
+- [x] Create Multer Middleware
+- [x] Refactor Create Course Endpoint
+- [x] Refactor Upload Course Content Endpoint
+- [x] Create Payment Functions
+- [x] Refactor Course Enpoint
+- [x] Refactor Payment Functions
+- [x] Add Endpoint To Update Course Progress
+- [ ] Create Endpoint To Record Game Score
+- [ ] Create Endpoint To Help Students Upload Content
+- [ ] Create Endpoint To Create Certificate
+- [ ] Move Endpoint **(courseController.getMyCourses)** To User Controller

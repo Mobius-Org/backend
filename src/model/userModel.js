@@ -39,7 +39,13 @@ const userSchema = new Schema(
       },
       salt: String
     },
-    enrolledCourse: [
+    enrolledCourses:[
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Course",
+      },
+    ],
+    enrolledCoursesDetails: [
       {
         courseId: {
           type: Schema.Types.ObjectId,
@@ -128,12 +134,13 @@ userSchema.methods.genResetToken = function() {
 
 // Enroll In A Course
 userSchema.methods.enroll = function(id, cId) {
-  this.enrolledCourse.push({ courseId: cId, id });
+  this.enrolledCoursesDetails.push({ courseId: cId, id });
+  this.enrolledCourses.push(cId);
 };
 
 // Certify
 userSchema.methods.certify = function(id, certStatus=undefined, certId=undefined) {
-  let certificate = this.enrolledCourse.filter(course => course.id === id)[0].certificate;
+  let certificate = this.enrolledCoursesDetails.filter(course => course.id === id)[0].certificate;
   if (certStatus === "acquired") {
     certificate.status = certStatus;
     certificate.certId = certId;
@@ -143,27 +150,27 @@ userSchema.methods.certify = function(id, certStatus=undefined, certId=undefined
   } {
     certificate.status = "in progress";
   };
-  this.enrolledCourse.filter(course => course.id === id)[0].certificate = certificate;
+  this.enrolledCoursesDetails.filter(course => course.id === id)[0].certificate = certificate;
 };
 
 // Set Game Badge
 userSchema.methods.setGameBadge = function(id) {
-  this.enrolledCourse.filter(course => course.id === id).badges.gameBadge = "acquired";
+  this.enrolledCoursesDetails.filter(course => course.id === id).badges.gameBadge = "acquired";
 };
 
 // Set Game Badge
 userSchema.methods.setCreatorBadge = function(id) {
-  this.enrolledCourse.filter(course => course.id === id).badges.creatorBadge = "acquired";
+  this.enrolledCoursesDetails.filter(course => course.id === id).badges.creatorBadge = "acquired";
 };
 
 // Set Game Score
 userSchema.methods.setScore = function(id, score) {
-  this.enrolledCourse.filter(course => course.id === id).gameScore = score;
+  this.enrolledCoursesDetails.filter(course => course.id === id).gameScore = score;
 };
 
 // Set Course Progress
 userSchema.methods.setProgress = function(id, currSection) {
-  this.enrolledCourse.filter(course => course.id === id).progress = currSection;
+  this.enrolledCoursesDetails.filter(course => course.id === id).progress = currSection;
 };
 
 // Get Name
