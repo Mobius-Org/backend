@@ -79,10 +79,11 @@ payment.verify = (ref, Course, User, Payment, resp) => {
                 newPayment.save((err, _) => {
                     if (err) {
                         console.log(err);
-                        return resp.status(500).send({
-                            status: "failed",
-                            message: "Something went wrong, rest assurred, we will fix it right away!"
-                        });
+                        // return resp.status(500).send({
+                        //     status: "failed",
+                        //     message: "Something went wrong, rest assurred, we will fix it right away!"
+                        // });
+                        return resp.redirect("https://mobiusorg.netlify.app/courseDetails/"+course.courseId);
                     }
                     else {
                         course.enroll(user._id);
@@ -93,26 +94,28 @@ payment.verify = (ref, Course, User, Payment, resp) => {
                         user.save((err, _) => {
                             if (err) {
                                 console.log(err);
-                                return resp.status(500).send({
-                                    status: "failed",
-                                    message: "Something went wrong, rest assurred, we will fix it right away!"
-                                });
+                                // return resp.status(500).send({
+                                //     status: "failed",
+                                //     message: "Something went wrong, rest assurred, we will fix it right away!"
+                                // });
+                                return resp.redirect("https://mobiusorg.netlify.app/courseDetails/"+course.courseId);
                             }
                             // save course
                             course.save((err, _) => {
                                 if (err) {
                                     console.log(error);
-                                    return resp.status(500).send({
-                                        status: "failed",
-                                        message: "Something went wrong, rest assurred, we will fix it right away!"
-                                    });
+                                    // return resp.status(500).send({
+                                    //     status: "failed",
+                                    //     message: "Something went wrong, rest assurred, we will fix it right away!"
+                                    // });
+                                    return resp.redirect("https://mobiusorg.netlify.app/courseDetails/"+course.courseId);
                                 }
                                 //send response
                                 // resp.status(200).send({
                                 //     status: "success",
                                 //     message: `Successfully enrolled in course: ${course.courseName}`,
                                 // });
-                                resp.redirect("https://mobiusorg.netlify.app/courseDetails/"+course.courseId);
+                                return resp.redirect("https://mobiusorg.netlify.app/courseDetails/"+course.courseId);
                             });
                         });
                     }
