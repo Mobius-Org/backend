@@ -1,27 +1,15 @@
 const cors = require("cors");
 const morgan = require("morgan");
 const express = require("express");
-const eSession = require("express-session");
 const AppError = require("./errors/appError");
 const appErrorHandler = require("./errors/app_error_handler");
 
 // Initalize app
 const app = express();
 
-// session
-const session = {
-  secret: process.env.SESSION_SECRET,
-  cookie: {},
-  resave: false,
-  saveUninitalized: false
-};
-if (process.env.NODE_ENV.trim() === "production") session.cookie.secure = true;
-
 //Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-app.use(eSession(session))
 
 // enable cors for specific route
 const allowedOrigins = [
