@@ -163,25 +163,32 @@ courseController.enrollCourse = catchAsync(async (req, res, next) => {
   let user = await User.findById({ _id: req.USER_ID });
   if (!user) return next(new AppError("Authorization Failed", 401));
 
+  // check if user is already enrolled in course
+  if (user.enrolledCourses.includes(course._id)) {
+    return res.status(208).send({
+      status: "success",
+      message: "Already Enrolled In Course"
+    })
+  };
+
   //check if course is free
   if (course.description.price === "Free") {
     // change course data by adding a new enrolled student
     course.enroll(req.USER_ID);
-    await course.save();
     //add course to a students data
     user.enroll(course.courseId, course._id);
 
     // save user and send response to client
     user.save((err, _) => {
-      if (err)
-        return next(
-          new AppError("Could Not Enroll User, Something Went Wrong", 400)
-        );
-      //send response
-      res.status(200).send({
-        status: "success",
-        message: `Successfully enrolled in course: ${course.courseName}`,
-      });
+      if (err) return next(new AppError("Could Not Enroll User, Something Went Wrong", 400));
+      course.save((err, _) => {
+        if (err) return next(new AppError("Could Not Enroll User, Something Went Wrong", 400));
+        //send response
+        res.status(200).send({
+          status: "success",
+          message: `Successfully enrolled in course: ${course.courseName}`,
+        });
+      })
     });
   } else {
     // Payment
