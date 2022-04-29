@@ -19,3 +19,4 @@
 - [ ] Create Endpoint To Record Game Score
 - [ ] Create Endpoint To Help Students Upload Content
 - [ ] Create Endpoint To Create Certificate
+- [ ] Move Endpoint **(courseController.getMyCourses)** To User Controller
