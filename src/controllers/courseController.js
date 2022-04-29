@@ -1,11 +1,11 @@
-const fs              = require("fs");
-const User            = require("../model/userModel");
-const upload          = require("../middlewares/multer");
-const Course          = require("../model/courseModel");
-const AppError        = require("../errors/appError");
-const catchAsync      = require("../utils/catchAsync");
-const payment         = require('../services/paystack');
-const Payment         = require('../model/paymentModel');
+const fs = require("fs");
+const User = require("../model/userModel");
+const upload = require("../middlewares/multer");
+const Course = require("../model/courseModel");
+const AppError = require("../errors/appError");
+const Payment = require('../model/paymentModel');
+const paystack = require('../services/paystack');
+const catchAsync = require("../utils/catchAsync");
 const { cloudUpload } = require("../utils/cloudinary");
 
 const courseController = {};
@@ -186,20 +186,30 @@ courseController.enrollCourse = catchAsync(async (req, res, next) => {
   } else {
     // Payment
     let email = user.email,
-        amount = String(Number(course.description.price) * 100);
+      amountTrue = course.description.price,
+      amount = String(Number(course.description.price) * 100);
 
-    payment.initalizeTransaction(
+    paystack.initalizeTransaction(
       {
         email,
         amount,
         metadata: {
+          email,
+          amountTrue,
           courseId,
-          userId: user._id
+          userId: user._id,
+          name: user.getFullName()
         }
       }, res);
   };
 });
 
+
+// verify payment
+courseController.verify = catchAsync(async (req, res, next) => {
+  const ref = req.query.reference;
+  paystack.verify(ref, Course, User, Payment, res);
+});
 
 // get courses a user enrolled in
 courseController.getMyCourses = catchAsync(async (req, res, next) => {

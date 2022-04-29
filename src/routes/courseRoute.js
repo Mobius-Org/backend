@@ -1,12 +1,12 @@
-const router = require("express").Router();
+const router           = require("express").Router();
+const { auth }         = require("../middlewares/auth");
 const courseController = require("../controllers/courseController");
-const { auth } = require("../middlewares/auth");
-const payment = require("../services/paystack");
 
 //create course
 router.post(
   "/createCourse",
-  // auth,
+  auth,
+  // checkAuth,
   courseController.upload,
   courseController.createCourse
 );
@@ -29,7 +29,7 @@ router.get(
     courseController.getOneCourse
 );
 
-//post user being enrolled     /first id is the course in question while the second id is tht if the user being enrolled
+//post user being enrolled
 router.post(
     "/enroll/:id",
     auth,
@@ -45,7 +45,7 @@ router.get(
 
 router.get(
     "/enroll/verify-transactions/",
-    payment.verify
+    courseController.verify
 );
 
 module.exports = router;
