@@ -108,7 +108,7 @@ payment.verify = (ref, Course, User, Payment, resp) => {
             }
         })
     }).on('error', error => {
-        console.error(error)
+        console.error(error);
     });
     req.end();
 };

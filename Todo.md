@@ -21,3 +21,5 @@
 - [ ] Create Endpoint To Create Certificate
 - [ ] Move Endpoint **(courseController.getMyCourses)** To User Controller
 - [x] Create Logout Endpoint
+- [ ] Create Newsletter Schema
+- [ ] Create Newsletter Endpoints
