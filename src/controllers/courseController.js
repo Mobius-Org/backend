@@ -69,7 +69,7 @@ courseController.createCourse = catchAsync(async (req, res, next) => {
   newCourse.addDescription(description);
 
   //save the schema
-  await newCourse.save((err, result) => {
+  newCourse.save((err, result) => {
     if (err) return next(new AppError({ message: err.message }, 400));
     else {
       //send a response
@@ -108,7 +108,7 @@ courseController.createContent = catchAsync(async (req, res, next) => {
   course.addContents(content);
 
   //save the schema
-  await course.save((err, result) => {
+  course.save((err, result) => {
     if (err) return next(new AppError({ message: err.message }, 400));
     else {
       //send a response
