@@ -32,5 +32,11 @@ router.patch(
     authController.resetPassword
 );
 
+// logout
+router.get(
+    '/logout',
+    auth,
+    authController.logout
+);
 
 module.exports = router;

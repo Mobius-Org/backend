@@ -62,7 +62,7 @@ userAuth.login = catchAsync(async (req, res, next) => {
     if (user.isValidPassword(password)){
         user.lastLoginTime = new Date();
         user.lastLogoutTime = null;
-        await user.save((err, result) => {
+        user.save((err, result) => {
             if (err) return next(new AppError("Could Not Create User!", 400));
             // send response
             jwt.createSendToken(result, 201, res);
@@ -100,8 +100,8 @@ userAuth.forgotPassword = catchAsync(async (req, res, next) => {
             type: "pwd_reset"
         };
 
-        let mailer = new emailService(),
-            response = await mailer.reset(body);
+        let mailer = new emailService();
+        await mailer.reset(body);
 
         // send response
         res.status(200).send({
@@ -129,7 +129,7 @@ userAuth.resetPassword = catchAsync(async (req, res, next) => {
     user.setPassword(newPassword);
     user.passwordChangedAt = new Date();
     user.resetToken = "";
-    await user.save((err, result) => {
+    user.save((err, _) => {
         if (err) return next(new AppError("Could Not Create User!", 400));
         // send response
         res.status(200).send({
@@ -138,5 +138,18 @@ userAuth.resetPassword = catchAsync(async (req, res, next) => {
         });
     });
 });
+
+
+// logout user
+userAuth.logout = catchAsync(async (req, res, next) => {
+    const user = await User.findById(req.USER_ID);
+    user.lastLogoutTime = new Date();
+    await user.save((err, _) => {
+        if (err) return next(new AppError("Could Not Log User Out!", 400));
+        // send response
+        res.sendStatus(200);
+    });
+});
+
 
 module.exports = userAuth;
