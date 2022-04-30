@@ -20,3 +20,4 @@
 - [ ] Create Endpoint To Help Students Upload Content
 - [ ] Create Endpoint To Create Certificate
 - [ ] Move Endpoint **(courseController.getMyCourses)** To User Controller
+- [x] Create Logout Endpoint
