@@ -22,3 +22,4 @@
 - [ ] Move Endpoint **(courseController.getMyCourses)** To User Controller
 - [ ] Create Newsletter Schema
 - [ ] Create Newsletter Endpoints
+- [ ] Create Logout Endpoint
