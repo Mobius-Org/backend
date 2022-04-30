@@ -98,13 +98,13 @@ payment.verify = (ref, Course, User, Payment, resp) => {
                                     console.log(error);
                                     return resp.redirect("https://mobiusorg.netlify.app/courses/verify-payment/failure-2");
                                 };
-                                return resp.redirect("https://mobiusorg.netlify.app/courses/verify-payment/success");
+                                return resp.redirect("http://localhost:3000/courses/verify-payment/success");
                             });
                         });
                     }
                 })
             } else {
-                resp.redirect("https://mobiusorg.netlify.app/courses/verify-payment/failure-1")
+                resp.redirect("http://localhost:3000/courses/verify-payment/failure-1")
             }
         })
     }).on('error', error => {
