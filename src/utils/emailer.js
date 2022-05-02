@@ -20,7 +20,7 @@ exports.emailService = class Email{
     }
 
     async reset(body){
-        let html = pug.renderFile( path.join(__dirname, "../public/email/resetPassword.pug"), body.data );
+        let html = pug.renderFile( path.join(__dirname, "../public/email/resetPasswordNew.pug"), body.data );
         const mailOptions = {
             from: this.from,
             to: body.recipient,
