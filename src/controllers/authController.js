@@ -100,11 +100,11 @@ userAuth.forgotPassword = catchAsync(async (req, res, next) => {
             type: "pwd_reset",
             attachments: [{
                 filename:"Group_66_logo_gt0e4k.png",
-                path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507811/email%20attachments/Group_66_logo_gt0e4k.png",
+                path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507811/email%20attachments/mobius-logo.png",
                 cid:"Group_66_logo_gt0e4k"
             },{
                 filename:"Forgot_Password_mxjnqn.gif",
-                path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507779/email%20attachments/Forgot_Password_mxjnqn.gif",
+                path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507779/email%20attachments/forgot-password.gif",
                 cid:"Forgot_Password_mxjnqn"
             }]
         };
