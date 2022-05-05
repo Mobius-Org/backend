@@ -180,7 +180,8 @@ userSchema.methods.setScore = function(id, score) {
 
 // Set Course Progress
 userSchema.methods.setProgress = function(id, currSection, progress) {
-  let currCourse = this.enrolledCoursesDetails.filter(course => course.id === id)
+  let currCourse = this.enrolledCoursesDetails.filter(course => course.id === id);
+  console.log(currCourse);
   currCourse.progress.idx = currSection;
   currCourse.progress.progress = progress;
   if (progress === 100){
