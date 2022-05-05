@@ -12,7 +12,7 @@ userController.updateProgress = catchAsync( async (req, res, next) =>{
     // get user
     const user = await User.findById(req.USER_ID);
     // update progress
-    user.updateProgress(courseId, idx, percent);
+    user.setProgress(courseId, idx, percent);
     // save user
     user.save((err, _) => {
         if (err) return next(new AppError("Could Not Update Progress", 400));
