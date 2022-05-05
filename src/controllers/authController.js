@@ -130,7 +130,7 @@ userAuth.resetPassword = catchAsync(async (req, res, next) => {
 
     // find user with token
     let user = await User.findOne({ resetToken });
-    if (!user) return next(new AppError("Cannot Find User With Initial Password Reset Request!", 400));
+    if (!user) return next(new AppError("CLink Expired Or Has Already Been Used! Initiate Another Request.", 400));
 
     let data = jwt.decodeResetToken(resetToken, user.password.hash),
         newPassword = req.body.password;
