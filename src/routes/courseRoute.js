@@ -50,7 +50,7 @@ router.get(
 
 // student upload content
 router.post(
-    "/student-upload",
+    "/student-upload/:courseId",
     auth,
     courseController.upload,
     courseController.studentUpload

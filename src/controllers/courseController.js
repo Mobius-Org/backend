@@ -265,7 +265,8 @@ courseController.getMyCourses = catchAsync(async (req, res, next) => {
 
 //student create new content
 courseController.studentUpload = catchAsync(async (req, res, next) => {
-  let { courseId, description, title } = req.body;
+  let { description, title } = req.body;
+  let courseId = req.params.courseId
 
   // check if course exist
   const course = await Course.findOne({ courseId });
