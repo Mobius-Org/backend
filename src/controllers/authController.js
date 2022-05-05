@@ -128,14 +128,14 @@ userAuth.resetPassword = catchAsync(async (req, res, next) => {
     // check if token exists
     if (!resetToken) return next(new AppError("Token Does Not Exist!", 400));
 
+    // find user with token
+    let user = await User.findOne({ resetToken });
+    if (!user) return next(new AppError("Cannot Find User With Initial Password Reset Request!", 400));
+
     let data = jwt.decodeResetToken(resetToken, user.password.hash),
         newPassword = req.body.password;
 
     if (!data) return next(new AppError("Link Expired Or Has Already Been Used! Initiate Another Request."));
-
-    // find user with token
-    let user = await User.findById({ _id: data.id });
-    if (!user) return next(new AppError("Cannot Find User With Initial Password Reset Request!", 400));
 
     // change password
     user.setPassword(newPassword);
