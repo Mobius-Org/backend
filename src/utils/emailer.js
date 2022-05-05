@@ -67,7 +67,7 @@ exports.emailService = class Email{
         return res.accepted
     }
 
-    async enrollSuccess(body){
+    async paymentConfirmation(body){
         let html = pug.renderFile( path.join(__dirname, "../public/email/paymentConfirmation.pug"), body.data );
         const mailOptions = {
             from: this.from,
