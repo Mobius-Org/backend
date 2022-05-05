@@ -1,6 +1,5 @@
-const router         = require('express').Router();
-const { body }       = require('express-validator');
-const { auth }       = require('../middlewares/auth');
+const router = require('express').Router();
+const { body } = require('express-validator');
 const authController = require('../controllers/authController');
 
 // create user
@@ -11,7 +10,7 @@ router.post(
     body('name').isString(),
     body('age').isNumeric(),
     body('favColor').isString(),
-    body('password').isLength({ min: 6}).matches(/\d/),
+    body('password').isLength({ min: 6 }).matches(/\d/),
     authController.signup
 );
 
@@ -33,11 +32,5 @@ router.patch(
     authController.resetPassword
 );
 
-// logout
-router.get(
-    '/logout',
-    auth,
-    authController.logout
-);
 
 module.exports = router;

@@ -1,0 +1,35 @@
+extends email
+
+block content
+    // Email Subject
+    table(role='presentation' align='left' width='100%')
+        tr
+            td(style='padding: 15px 30px 0px 30px;')
+                h1 Payment Confirmation
+    // Email Body
+    table(role='presentation' align='left' width='100%')
+        tr
+            td(style='padding: 0 30px 15px 30px;')
+                h2(align='center') Payment Details
+                // Payment Details Table
+                table(width='100%' cellspacing='0' style='border: 1px solid #B9B9B9; border-collapse: collapse; background-color: #EDEDED; margin-bottom: 30px;')
+                    tr
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') Reference No.
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') 373746338958
+                    tr
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') Customer Name
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') Bell Nweke
+                    tr
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') Course
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') Financial Literacy
+                    tr
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') Amount
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') NGN 3,000
+                    tr
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') Discount
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') -
+                    tr
+                        td(style='border: 1px solid #B9B9B9; padding: 10px; font-weight: bold;') Total
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') 373746338958
+                a(href='' style='background-color: #00B7AB; display: inline-block; color: #FFFFFF; padding: 14px 25px; border-radius: 10px; text-align: center; text-decoration: none')
+                    | Start Learning

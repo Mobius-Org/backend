@@ -1,17 +1,13 @@
-doctype transitional
-html
-  head
-    title #{title}
-    meta(http–equiv='Content-Type' content='text/html; charset=UTF-8')
-    meta(http–equiv='X-UA-Compatible' content='IE=edge')
-    meta(name='viewport' content='width=device-width, initial-scale=1.0')
-
-  body(style='margin:0px; padding: 0; width: 100%; height:100%; box-sizing: border-box; font-size: 16px;')
-    table(align='center' border='0' cellspacing='20%' cellpadding='5px' width='100%')
-      thead
+doctype html
+head
+    meta(http-equiv='Content-Type' content='text/html; charset=utf-8')
+    meta(name='viewport' content='width=device-width')
+    title
+    style.
+body(style='width: 600px; margin: auto; background: white')
+    // Header for Mobius logo
+    table(role='presentation' align='left' style='border-bottom: 1px solid' width='100%')
         tr
-          th(align='center' valign='top' style='font-size: 20px; color: #F80') Mobius Org!
-      block content
-      tfoot
-        tr
-          td(align='center' valign='bottom' style='color: #F80') Mobius Org! &copy;
+            td(style='padding: 30px;')
+            img(alt='Mobius logo' src='C:\Users\Tochukwu\Desktop\mobius-email.png' width='200px')
+    block content
