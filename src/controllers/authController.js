@@ -100,11 +100,11 @@ userAuth.forgotPassword = catchAsync(async (req, res, next) => {
             type: "pwd_reset",
             attachments: [{
                 filename:"Group_66_logo_gt0e4k.png",
-                path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507811/email%20attachments/Group_66_logo_gt0e4k.png",
+                path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507811/email%20attachments/mobius-logo.png",
                 cid:"Group_66_logo_gt0e4k"
             },{
                 filename:"Forgot_Password_mxjnqn.gif",
-                path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507779/email%20attachments/Forgot_Password_mxjnqn.gif",
+                path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507779/email%20attachments/forgot-password.gif",
                 cid:"Forgot_Password_mxjnqn"
             }]
         };
@@ -128,14 +128,14 @@ userAuth.resetPassword = catchAsync(async (req, res, next) => {
     // check if token exists
     if (!resetToken) return next(new AppError("Token Does Not Exist!", 400));
 
+    // find user with token
+    let user = await User.findOne({ resetToken });
+    if (!user) return next(new AppError("Link Expired Or Has Already Been Used! Initiate Another Request.", 400));
+
     let data = jwt.decodeResetToken(resetToken, user.password.hash),
         newPassword = req.body.password;
 
     if (!data) return next(new AppError("Link Expired Or Has Already Been Used! Initiate Another Request."));
-
-    // find user with token
-    let user = await User.findById({ _id: data.id });
-    if (!user) return next(new AppError("Cannot Find User With Initial Password Reset Request!", 400));
 
     // change password
     user.setPassword(newPassword);
