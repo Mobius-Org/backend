@@ -27,6 +27,7 @@ exports.emailService = class Email{
             subject: body.subject,
             html: html,
             priority: "high",
+            attachments:body.attachments
         };
         // Create a transport and send email
         this.transporter().use('compile', inlinecss());

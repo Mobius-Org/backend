@@ -97,7 +97,16 @@ userAuth.forgotPassword = catchAsync(async (req, res, next) => {
             },
             recipient: user.email,
             subject: "PASSWORD RESET",
-            type: "pwd_reset"
+            type: "pwd_reset",
+            attachments: [{
+                filename:"Group_66_logo_gt0e4k.png",
+                path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507811/email%20attachments/Group_66_logo_gt0e4k.png",
+                cid:"Group_66_logo_gt0e4k"
+            },{
+                filename:"Forgot_Password_mxjnqn.gif",
+                path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507779/email%20attachments/Forgot_Password_mxjnqn.gif",
+                cid:"Forgot_Password_mxjnqn"
+            }]
         };
 
         let mailer = new emailService();
@@ -144,7 +153,7 @@ userAuth.resetPassword = catchAsync(async (req, res, next) => {
 userAuth.logout = catchAsync(async (req, res, next) => {
     const user = await User.findById(req.USER_ID);
     user.lastLogoutTime = new Date();
-    await user.save((err, _) => {
+    user.save((err, _) => {
         if (err) return next(new AppError("Could Not Log User Out!", 400));
         // send response
         res.sendStatus(200);
