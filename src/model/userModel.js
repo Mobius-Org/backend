@@ -53,8 +53,12 @@ const userSchema = new Schema(
         },
         id: String,
         progress: {
-          type: String,
-          default: "start"
+          status: {
+            type: String,
+            default: "Start"
+          },
+          idx: Number,
+          progress: Number
         },
         gameScore: Number,
         certificate: {
@@ -169,8 +173,16 @@ userSchema.methods.setScore = function(id, score) {
 };
 
 // Set Course Progress
-userSchema.methods.setProgress = function(id, currSection) {
-  this.enrolledCoursesDetails.filter(course => course.id === id).progress = currSection;
+userSchema.methods.setProgress = function(id, currSection, progress) {
+  let currCourse = this.enrolledCoursesDetails.filter(course => course.id === id)
+  currCourse.idx = currSection;
+  currCourse.progress = progress;
+  if (progress === 100){
+    currCourse.status = "Completed"
+  } else {
+    currCourse.status = "Continue"
+  }
+  this.enrolledCoursesDetails.filter(course => course.id === id) = currCourse;
 };
 
 // Get Name
