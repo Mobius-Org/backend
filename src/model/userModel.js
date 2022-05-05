@@ -180,8 +180,7 @@ userSchema.methods.setScore = function(id, score) {
 
 // Set Course Progress
 userSchema.methods.setProgress = function(id, currSection, progress) {
-  let currCourse = this.enrolledCoursesDetails.filter(course => course.id === id);
-  console.log(currCourse);
+  let currCourse = this.enrolledCoursesDetails.filter(course => course.id === id)[0];
   currCourse.progress.idx = currSection;
   currCourse.progress.progress = progress;
   if (progress === 100){
@@ -189,7 +188,7 @@ userSchema.methods.setProgress = function(id, currSection, progress) {
   } else {
     currCourse.progress.status = "Continue"
   }
-  this.enrolledCoursesDetails[this.enrolledCoursesDetails.indexOf(this.enrolledCoursesDetails.filter(course => course.id === id))] = currCourse;
+  this.enrolledCoursesDetails[this.enrolledCoursesDetails.indexOf(this.enrolledCoursesDetails.filter(course => course.id === id)[0])] = currCourse;
 };
 
 // Get Name
