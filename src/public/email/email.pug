@@ -1,0 +1,20 @@
+doctype html
+head
+    meta(http-equiv='Content-Type' content='text/html; charset=utf-8')
+    meta(name='viewport' content='width=device-width')
+    title
+    style.
+        * {
+        box-sizing: border-box;
+        }
+    link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito' type='text/css')
+body
+    table(role='presentation' style="background-color: white; width: 600px; height: 100%; margin: auto; font-family: 'Nunito';")
+        tr
+            td
+                // Header for Mobius logo
+                table(role='presentation' align='center' style='border-bottom: 1px solid' width='100%')
+                    tr
+                        td(style='padding: 15px 30px;')
+                            img(alt='Mobius logo' src='cid:mobius-logo' height='50px')
+                block content

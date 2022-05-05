@@ -98,6 +98,59 @@ payment.verify = (ref, Course, User, Payment, resp) => {
                                     console.log(error);
                                     return resp.redirect("https://mobiusorg.netlify.app/courses/verify-payment/failure-2");
                                 };
+
+                                // send mail - payment confirmation
+                                let body = {
+                                    data: {
+                                        reference: ref,
+                                        name: user.getFullName(),
+                                        courseName: course.courseName,
+                                        courseAmount: course.description.price,
+                                        discount: 0,
+                                        courseLink: `https://mobiusorg.netlify.app/dashboard/myCourses/viewCourse/${course.courseId}`,
+                                        title: "Payment Confirmation"
+                                    },
+                                    recipient: user.email,
+                                    subject: "Payment Confirmation",
+                                    type: "pwd_reset",
+                                    attachments: [{
+                                        filename:"mobius-logo.png",
+                                        path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507811/email%20attachments/mobius-logo.png",
+                                        cid:"mobius-logo"
+                                    },{
+                                        filename:"payment-successful.gif",
+                                        path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651751296/email%20attachments/payment-successful.gif",
+                                        cid:"password-successful"
+                                    }]
+                                };
+
+                                let mailer = new emailService();
+                                mailer.paymentConfirmation(body);
+                                
+                                //send mail - enroll success
+                                let enrollBody = {
+                                    data: {
+                                        courseName: course.courseName,
+                                        title: `You're In! Welcome to ${course.courseName} course`,
+                                        courseLink: `https://mobiusorg.netlify.app/dashboard/myCourses/viewCourse/${course.courseId}`
+                                    },
+                                    recipient: user.email,
+                                    subject: `You're In! Welcome to ${course.courseName} course`,
+                                    type: "pwd_reset",
+                                    attachments: [{
+                                        filename:"mobius-logo.png",
+                                        path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507811/email%20attachments/mobius-logo.png",
+                                        cid:"mobius-logo"
+                                    },{
+                                        filename:"welcome-go.gif",
+                                        path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651752953/email%20attachments/welcome-go.gif",
+                                        cid:"welcome-go"
+                                    }]
+                                };
+                        
+                                let enrollMailer = new emailService();
+                                enrollMailer.enrollSuccess(enrollBody);
+
                                 return resp.redirect("https://mobiusorg.netlify.app/courses/verify-payment/success");
                             });
                         });

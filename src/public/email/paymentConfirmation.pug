@@ -1,0 +1,43 @@
+extends email
+
+block content
+    // Email Subject
+    table(role='presentation' align='left' width='100%')
+        tr
+            td(style='padding: 15px 30px 0px 30px; text-align: center;')
+                h1 Payment Confirmation
+    // Email Body
+    table(role='presentation' align='left' width='100%')
+        tr
+            td(style='padding: 0 30px 15px 30px;')
+                img(src='cid:payment-successful' alt='Blue check icon unfolding in circle' width='100%')
+                // Payment Details Table
+                p(style='text-align: center;') Payment Details
+                table(width='100%' cellspacing='0' style='border: 1px solid #B9B9B9; border-collapse: collapse; background-color: #EDEDED; margin-bottom: 30px;')
+                    tr
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') Reference No.
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') #{reference}
+                    tr
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') Customer Name
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') #{name}
+                    tr
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') Course
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') #{courseName}
+                    tr
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') Amount
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') NGN #{courseAmount}
+                    tr
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') Discount
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') #{discount}
+                    tr
+                        td(style='border: 1px solid #B9B9B9; padding: 10px; font-weight: bold;') Total
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') NGN #{courseAmount - discount}
+                a(href=courseLink style='background-color: #00B7AB; display: inline-block; color: #FFFFFF; padding: 14px 25px; border-radius: 10px; text-align: center; text-decoration: none')
+                    | Start Learning
+    // Footer
+    table(role='presentation' align='left' style='border-top: 1px solid' width='100%')
+        tr
+            td(style='padding: 30px;')
+                p Mobius Organization
+            td(style='padding: 30px;')
+                p Support: mobiuskidsorg@gmail.com
