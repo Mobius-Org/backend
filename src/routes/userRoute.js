@@ -4,7 +4,7 @@ const userController = require('../controllers/userController');
 
 // update progress
 router.patch(
-    "/view-course/update-progress",
+    "/view-course/update-progress/:courseId",
     auth,
     userController.updateProgress
 );
