@@ -1,4 +1,5 @@
 const User = require("../model/userModel");
+const Notif = require("../model/notificationModel");
 const AppError = require("../errors/appError");
 const catchAsync = require("../utils/catchAsync");
 
@@ -21,4 +22,23 @@ userController.updateProgress = catchAsync( async (req, res, next) =>{
     });
 });
 
+
+// subscribe to newsletter
+userController.subscribe = catchAsync( async (req, res, next) => {
+    // get email
+    const { email } = req.body;
+    if (!email) return next(new AppError("No Email To Subscribe", 400));
+
+    const newsletter = new Notif();
+    newsletter.subscribe(email);
+
+    newsletter.save((err, _) => {
+        if (err) return next(new AppError("There is an error, we will fix it soon", 400));
+        res.status(200).send({
+            status: "success",
+            message: "Newsletter Subscription Successful!"
+        })
+    })
+
+})
 module.exports = userController;

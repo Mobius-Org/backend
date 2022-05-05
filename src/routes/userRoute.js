@@ -9,5 +9,11 @@ router.patch(
     userController.updateProgress
 );
 
+// subscribe to newsletter
+router.patch(
+    "/subscribe",
+    userController.subscribe
+);
+
 
 module.exports = router;
