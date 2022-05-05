@@ -3,9 +3,8 @@ const User = require("../model/userModel");
 const upload = require("../middlewares/multer");
 const Course = require("../model/courseModel");
 const AppError = require("../errors/appError");
-const Payment = require('../model/paymentModel');
-const paystack = require('../services/paystack');
 const catchAsync = require("../utils/catchAsync");
+const handlerFactory = require("../utils/handlerFactory");
 const { cloudUpload } = require("../utils/cloudinary");
 
 const courseController = {};
@@ -150,76 +149,42 @@ courseController.getOneCourse = catchAsync(async (req, res, next) => {
   });
 });
 
-// enroll in a course
 courseController.enrollCourse = catchAsync(async (req, res, next) => {
   //find course by  id
-  const courseId = req.params.id;
+  const id = req.params.id;
 
-  let course = await Course.findOne({ courseId });
+  let course = await Course.findOne({ id });
   if (!course)
-    return next(new AppError(`Course with id: ${courseId} not found`, 404));
+    return next(new AppError(`Course with id: ${id} not found`, 404));
 
   //find user
   let user = await User.findById({ _id: req.USER_ID });
-  if (!user) return next(new AppError("Authorization Failed", 403));
-
-  // check if user is already enrolled in course
-  if (user.enrolledCourses.includes(course._id)) {
-    return res.status(208).send({
-      status: "success",
-      message: "Already Enrolled In Course"
-    })
-  };
+  if (!user) return next(new AppError("Authorization Failed", 401));
 
   //check if course is free
   if (course.description.price === "Free") {
     // change course data by adding a new enrolled student
     course.enroll(req.USER_ID);
+    await course.save();
     //add course to a students data
     user.enroll(course.courseId, course._id);
-
-    // save user and send response to client
-    user.save((err, _) => {
-      if (err) return next(new AppError("Could Not Enroll User, Something Went Wrong", 400));
-      course.save((err, _) => {
-        if (err) return next(new AppError("Could Not Enroll User, Something Went Wrong", 400));
-        //send response
-        res.status(200).send({
-          status: "success",
-          message: `Successfully enrolled in course: ${course.courseName}`,
-        });
-      })
-    });
   } else {
     // Payment
-    let email = user.email,
-      amountTrue = course.description.price,
-      amount = String(Number(course.description.price) * 100);
+  }
 
-    paystack.initalizeTransaction(
-      {
-        email,
-        amount,
-        metadata: {
-          email,
-          amountTrue,
-          courseId,
-          userId: user._id,
-          name: user.getFullName()
-        }
-      }, res);
-  };
+  user.save((err, _) => {
+    if (err)
+      return next(
+        new AppError("Could Not Enroll User, Something Went Wrong", 400)
+      );
+    //send response
+    res.status(200).send({
+      status: "success",
+      message: `Successfully enrolled in course: ${course.courseName}`,
+    });
+  });
 });
 
-
-// verify payment
-courseController.verify = catchAsync(async (req, res, next) => {
-  const ref = req.query.reference;
-  paystack.verify(ref, Course, User, Payment, res);
-});
-
-
-// get courses a user enrolled in
 courseController.getMyCourses = catchAsync(async (req, res, next) => {
   //find user
   User.findById({ _id: req.USER_ID })
@@ -236,44 +201,48 @@ courseController.getMyCourses = catchAsync(async (req, res, next) => {
     });
 });
 
-// //student create new content
-// courseController.studentUpload = catchAsync(async (req, res, next) => {
-//   let { courseId, review } = req.body;
+//student create new content
+courseController.studentUpload = catchAsync(async (req, res, next) => {
+  let { courseId, content} = req.body;
 
-//   // check if a course exists
-//   const course = await Course.findOne({ courseId });
-//   if (!course) return next(new AppError("Course not found", 404));
+  // check if course exist
+  const course = await Course.findOne({ courseId });
+  if (!course) return next(new AppError("Course not found", 404));
 
-//   // get video for content
-//   let videoUrl;
-//   if (req.files) {
-//     const path = req.files[0].path;
-//     videoUrl = await cloudUpload(path);
+  //find user
+  let user = await User.findById({ _id: req.USER_ID });
+  if (!user) return next(new AppError("Authorization Failed", 401));
 
-//     if (!videoUrl) {
-//       fs.unlinkSync(path);
-//       return next(new AppError("Network Error!", 503));
-//     }
-//     fs.unlinkSync(path);
-//   }
+  // get video for content
+  let videoUrl;
+  if (req.files) {
+    const path = req.files[0].path;
+    videoUrl = await cloudUpload(path);
 
-//   review= JSON.parse(review);
-//   //review.video = videoUrl.url;
+    if (!videoUrl) {
+      fs.unlinkSync(path);
+      return next(new AppError("Network Error!", 503));
+    }
+    fs.unlinkSync(path);
+  }
+ 
+  content = JSON.parse(content);
+  content.video = videoUrl.url;
 
-//   // add review to schema
-//   course.review(review);
+  // add content to course
+  course.addContents(content);
 
-//   //save the schema
-//   await course.save((err, result) => {
-//     if (err) return next(new AppError({ message: err.message }, 400));
-//     else {
-//       //send a response
-//       res.status(201).send({
-//         status: "success",
-//         message: "Review sent successfully",
-//       });
-//     }
-//   });
-// });
+  //save the schema
+  await course.save((err, result) => {
+    if (err) return next(new AppError({ message: err.message }, 400));
+    else {
+      //send a response
+      res.status(201).send({
+        status: "success",
+        message: "Review sent successfully",
+      });
+    }
+  });
+});
 
 module.exports = courseController;
