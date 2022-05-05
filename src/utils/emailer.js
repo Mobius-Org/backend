@@ -20,7 +20,55 @@ exports.emailService = class Email{
     }
 
     async reset(body){
-        let html = pug.renderFile( path.join(__dirname, "../public/email/resetPasswordNew.pug"), body.data );
+        let html = pug.renderFile( path.join(__dirname, "../public/email/passwordReset.pug"), body.data );
+        const mailOptions = {
+            from: this.from,
+            to: body.recipient,
+            subject: body.subject,
+            html: html,
+            priority: "high",
+            attachments:body.attachments
+        };
+        // Create a transport and send email
+        this.transporter().use('compile', inlinecss());
+        let res = await this.transporter().sendMail(mailOptions);
+        return res.accepted
+    }
+
+    async resetSuccess(body){
+        let html = pug.renderFile( path.join(__dirname, "../public/email/passwordChangedSuccess.pug"), body.data );
+        const mailOptions = {
+            from: this.from,
+            to: body.recipient,
+            subject: body.subject,
+            html: html,
+            priority: "high",
+            attachments:body.attachments
+        };
+        // Create a transport and send email
+        this.transporter().use('compile', inlinecss());
+        let res = await this.transporter().sendMail(mailOptions);
+        return res.accepted
+    }
+
+    async enrollSuccess(body){
+        let html = pug.renderFile( path.join(__dirname, "../public/email/welcomeCourse.pug"), body.data );
+        const mailOptions = {
+            from: this.from,
+            to: body.recipient,
+            subject: body.subject,
+            html: html,
+            priority: "high",
+            attachments:body.attachments
+        };
+        // Create a transport and send email
+        this.transporter().use('compile', inlinecss());
+        let res = await this.transporter().sendMail(mailOptions);
+        return res.accepted
+    }
+
+    async enrollSuccess(body){
+        let html = pug.renderFile( path.join(__dirname, "../public/email/paymentConfirmation.pug"), body.data );
         const mailOptions = {
             from: this.from,
             to: body.recipient,

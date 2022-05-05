@@ -7,6 +7,8 @@ const Payment = require('../model/paymentModel');
 const paystack = require('../services/paystack');
 const catchAsync = require("../utils/catchAsync");
 const { cloudUpload } = require("../utils/cloudinary");
+const { emailService }     = require('../utils/emailer');
+
 
 const courseController = {};
 
@@ -183,6 +185,31 @@ courseController.enrollCourse = catchAsync(async (req, res, next) => {
       if (err) return next(new AppError("Could Not Enroll User, Something Went Wrong", 400));
       course.save((err, _) => {
         if (err) return next(new AppError("Could Not Enroll User, Something Went Wrong", 400));
+
+        //send mail
+        let body = {
+          data: {
+              courseName: course.courseName,
+              title: `You're In! Welcome to ${course.courseName} course`,
+              courseLink: `https://mobiusorg.netlify.app/dashboard/myCourses/viewCourse/${course.courseId}`
+          },
+          recipient: user.email,
+          subject: `You're In! Welcome to ${course.courseName} course`,
+          type: "pwd_reset",
+          attachments: [{
+              filename:"mobius-logo.png",
+              path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507811/email%20attachments/mobius-logo.png",
+              cid:"mobius-logo"
+          },{
+              filename:"welcome-go.gif",
+              path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651752953/email%20attachments/welcome-go.gif",
+              cid:"welcome-go"
+          }]
+      };
+
+      let mailer = new emailService();
+      mailer.enrollSuccess(body);
+
         //send response
         res.status(200).send({
           status: "success",

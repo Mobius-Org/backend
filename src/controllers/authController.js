@@ -93,19 +93,19 @@ userAuth.forgotPassword = catchAsync(async (req, res, next) => {
             data: {
                 link,
                 name: fullName,
-                title: "RESET PASSWORD"
+                title: "Mobius Password Reset"
             },
             recipient: user.email,
-            subject: "PASSWORD RESET",
+            subject: "Mobius Password Reset",
             type: "pwd_reset",
             attachments: [{
-                filename:"Group_66_logo_gt0e4k.png",
+                filename:"mobius-logo.png",
                 path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507811/email%20attachments/mobius-logo.png",
-                cid:"Group_66_logo_gt0e4k"
+                cid:"mobius-logo"
             },{
-                filename:"Forgot_Password_mxjnqn.gif",
+                filename:"forgot-password.gif",
                 path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507779/email%20attachments/forgot-password.gif",
-                cid:"Forgot_Password_mxjnqn"
+                cid:"forgot-password"
             }]
         };
 
@@ -143,6 +143,29 @@ userAuth.resetPassword = catchAsync(async (req, res, next) => {
     user.resetToken = "";
     user.save((err, _) => {
         if (err) return next(new AppError("Could Not Change Password. We Will Fix It Right Away!", 400));
+
+        //send mail
+        let body = {
+            data: {
+                title: "Password Changed Successfully"
+            },
+            recipient: user.email,
+            subject: "Password Changed Successfully",
+            type: "pwd_reset",
+            attachments: [{
+                filename:"mobius-logo.png",
+                path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507811/email%20attachments/mobius-logo.png",
+                cid:"mobius-logo"
+            },{
+                filename:"password-reset-success.gif",
+                path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651748529/email%20attachments/password-reset-success.gif",
+                cid:"password-reset-success"
+            }]
+        };
+
+        let mailer = new emailService();
+        mailer.resetSuccess(body);
+        
         // send response
         res.status(200).send({
             status: "success",

@@ -10,29 +10,29 @@ block content
     table(role='presentation' align='left' width='100%')
         tr
             td(style='padding: 0 30px 15px 30px;')
-                img(src='https://res.cloudinary.com/mobius-kids-org/image/upload/v1651751296/email%20attachments/payment-successful.gif' alt='Blue check icon unfolding in circle' width='100%')
+                img(src='cid:payment-successful' alt='Blue check icon unfolding in circle' width='100%')
                 // Payment Details Table
                 p(style='text-align: center;') Payment Details
                 table(width='100%' cellspacing='0' style='border: 1px solid #B9B9B9; border-collapse: collapse; background-color: #EDEDED; margin-bottom: 30px;')
                     tr
                         td(style='border: 1px solid #B9B9B9; padding: 10px;') Reference No.
-                        td(style='border: 1px solid #B9B9B9; padding: 10px;') 373746338958
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') #{reference}
                     tr
                         td(style='border: 1px solid #B9B9B9; padding: 10px;') Customer Name
-                        td(style='border: 1px solid #B9B9B9; padding: 10px;') Bell Nweke
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') #{name}
                     tr
                         td(style='border: 1px solid #B9B9B9; padding: 10px;') Course
-                        td(style='border: 1px solid #B9B9B9; padding: 10px;') Financial Literacy
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') #{courseName}
                     tr
                         td(style='border: 1px solid #B9B9B9; padding: 10px;') Amount
-                        td(style='border: 1px solid #B9B9B9; padding: 10px;') NGN 3,000
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') NGN #{courseAmount}
                     tr
                         td(style='border: 1px solid #B9B9B9; padding: 10px;') Discount
-                        td(style='border: 1px solid #B9B9B9; padding: 10px;') -
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') #{discount}
                     tr
                         td(style='border: 1px solid #B9B9B9; padding: 10px; font-weight: bold;') Total
-                        td(style='border: 1px solid #B9B9B9; padding: 10px;') 373746338958
-                a(href='' style='background-color: #00B7AB; display: inline-block; color: #FFFFFF; padding: 14px 25px; border-radius: 10px; text-align: center; text-decoration: none')
+                        td(style='border: 1px solid #B9B9B9; padding: 10px;') NGN #{courseAmount - discount}
+                a(href=courseLink style='background-color: #00B7AB; display: inline-block; color: #FFFFFF; padding: 14px 25px; border-radius: 10px; text-align: center; text-decoration: none')
                     | Start Learning
     // Footer
     table(role='presentation' align='left' style='border-top: 1px solid' width='100%')
