@@ -97,7 +97,16 @@ userAuth.forgotPassword = catchAsync(async (req, res, next) => {
             },
             recipient: user.email,
             subject: "PASSWORD RESET",
-            type: "pwd_reset"
+            type: "pwd_reset",
+            attachments: [{
+                filename:"Group_66_logo_gt0e4k.png",
+                path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507811/email%20attachments/Group_66_logo_gt0e4k.png",
+                cid:"Group_66_logo_gt0e4k"
+            },{
+                filename:"Forgot_Password_mxjnqn.gif",
+                path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507779/email%20attachments/Forgot_Password_mxjnqn.gif",
+                cid:"Forgot_Password_mxjnqn"
+            }]
         };
 
         let mailer = new emailService();
@@ -116,21 +125,24 @@ userAuth.forgotPassword = catchAsync(async (req, res, next) => {
 userAuth.resetPassword = catchAsync(async (req, res, next) => {
     const resetToken = req.params.token;
 
-    // find user with token
-    let user = await User.findOne({ resetToken });
-    if (!user) return next(new AppError("Cannot Find User With Initial Password Reset Request!", 400));
+    // check if token exists
+    if (!resetToken) return next(new AppError("Token Does Not Exist!", 400));
 
     let data = jwt.decodeResetToken(resetToken, user.password.hash),
         newPassword = req.body.password;
 
     if (!data) return next(new AppError("Link Expired Or Has Already Been Used! Initiate Another Request."));
 
+    // find user with token
+    let user = await User.findById({ _id: data.id });
+    if (!user) return next(new AppError("Cannot Find User With Initial Password Reset Request!", 400));
+
     // change password
     user.setPassword(newPassword);
     user.passwordChangedAt = new Date();
     user.resetToken = "";
     user.save((err, _) => {
-        if (err) return next(new AppError("Could Not Create User!", 400));
+        if (err) return next(new AppError("Could Not Change Password. We Will Fix It Right Away!", 400));
         // send response
         res.status(200).send({
             status: "success",
@@ -144,7 +156,7 @@ userAuth.resetPassword = catchAsync(async (req, res, next) => {
 userAuth.logout = catchAsync(async (req, res, next) => {
     const user = await User.findById(req.USER_ID);
     user.lastLogoutTime = new Date();
-    await user.save((err, _) => {
+    user.save((err, _) => {
         if (err) return next(new AppError("Could Not Log User Out!", 400));
         // send response
         res.sendStatus(200);
