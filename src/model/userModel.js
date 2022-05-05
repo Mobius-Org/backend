@@ -181,14 +181,14 @@ userSchema.methods.setScore = function(id, score) {
 // Set Course Progress
 userSchema.methods.setProgress = function(id, currSection, progress) {
   let currCourse = this.enrolledCoursesDetails.filter(course => course.id === id)
-  currCourse.idx = currSection;
-  currCourse.progress = progress;
+  currCourse.progress.idx = currSection;
+  currCourse.progress.progress = progress;
   if (progress === 100){
-    currCourse.status = "Completed"
+    currCourse.progress.status = "Completed"
   } else {
-    currCourse.status = "Continue"
+    currCourse.progress.status = "Continue"
   }
-  this.enrolledCoursesDetails.filter(course => course.id === id) = currCourse;
+  this.enrolledCoursesDetails[this.enrolledCoursesDetails.indexOf(this.enrolledCoursesDetails.filter(course => course.id === id))] = currCourse;
 };
 
 // Get Name
