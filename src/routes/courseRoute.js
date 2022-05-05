@@ -48,4 +48,12 @@ router.get(
     courseController.verify
 );
 
+// student upload content
+router.post(
+    "/student-upload",
+    auth,
+    courseController.upload,
+    courseController.studentUpload
+);
+
 module.exports = router;

@@ -263,4 +263,51 @@ courseController.getMyCourses = catchAsync(async (req, res, next) => {
     });
 });
 
+//student create new content
+courseController.studentUpload = catchAsync(async (req, res, next) => {
+  let { courseId, description, title } = req.body;
+
+  // check if course exist
+  const course = await Course.findOne({ courseId });
+  if (!course) return next(new AppError("Course not found", 404));
+
+  //check if user is logged
+  let user = await User.findById({ _id: req.USER_ID });
+  if (!user) return next(new AppError("User not found", 400));
+
+  // get video for content
+  let videoUrl;
+  if (req.files) {
+    const path = req.files[0].path;
+    videoUrl = await cloudUpload(path);
+
+    if (!videoUrl) {
+      fs.unlinkSync(path);
+      return next(new AppError("Network Error!", 503));
+    }
+    fs.unlinkSync(path);
+  }
+
+  //create new Schema
+  const newStudentContent = new StudentContent({
+    uploader: req.USER_ID,
+    courseId,
+    title,
+    video: videoUrl.url,
+    description,
+  });
+
+  //save the schema
+  newStudentContent.save((err, result) => {
+    if (err) return next(new AppError({ message: err.message }, 400));
+    else {
+      //send a response
+      res.status(201).send({
+        status: "success",
+        message: "Student content uploaded successfully",
+      });
+    }
+  });
+});
+
 module.exports = courseController;
