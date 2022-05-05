@@ -16,12 +16,18 @@ adminController.approveContent = catchAsync(async (req, res, next) => {
   if (!studentContent)
     return next(new AppError("Student Content not found", 404));
 
-  studentContent.changeStatus(status);
-
-  //send a response
-  res.status(200).send({
-    status: "status",
-    message: `This student content has been successfully approved`,
+  studentContent.updateStatus(status);
+  studentContent.save((err, _) => {
+    if (err) {
+      return next(
+        new AppError("Could not change status, Something Went Wrong", 400)
+      );
+    }
+    //send a response
+    res.status(200).send({
+      status: "status",
+      message: `This student content has been accepted`,
+    });
   });
 });
 
@@ -35,12 +41,18 @@ adminController.rejectContent = catchAsync(async (req, res, next) => {
   if (!studentContent)
     return next(new AppError("Student Content not found", 404));
 
-  studentContent.changeStatus(status);
-
-  //send a response
-  res.status(200).send({
-    status: "status",
-    message: `This student content has rejected`,
+  studentContent.updateStatus(status);
+  studentContent.save((err, _) => {
+    if (err) {
+      return next(
+        new AppError("Could not change status, Something Went Wrong", 400)
+      );
+    }
+    //send a response
+    res.status(200).send({
+      status: "status",
+      message: `This student content has been rejected`,
+    });
   });
 });
 

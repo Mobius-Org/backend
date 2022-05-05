@@ -31,7 +31,7 @@ router.post("/enroll/:id", auth, courseController.enrollCourse);
 router.get("/dashboard/myCourses", auth, courseController.getMyCourses);
 
 // verify course payment
-router.get("/enroll/verify-transactions/", courseController.verify);
+//router.get("/enroll/verify-transactions/", courseController.verify);
 
 // student upload content
 router.post(

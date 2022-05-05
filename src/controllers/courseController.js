@@ -232,7 +232,7 @@ courseController.studentUpload = catchAsync(async (req, res, next) => {
     uploader: req.USER_ID,
     courseId,
     title,
-    video: videoUrl,
+    video: videoUrl.url,
     description,
   });
 

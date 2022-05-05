@@ -10,7 +10,7 @@ const studentContentSchema = new Schema({
     ref: "User",
   },
   courseId: reqStr,
-  video: reqStr,
+  video: String,
   description: reqStr,
   title: reqStr,
   status: {
@@ -24,9 +24,9 @@ const studentContentSchema = new Schema({
 
 // Student upload Contents
 studentContentSchema.methods.updateStatus = function (status) {
-  if (status == "approved") {
+  if (status === "approved") {
     this.status = "approved";
-  } else if (status == "rejected") {
+  } else if (status === "rejected") {
     this.status = "rejected";
   }
 };
