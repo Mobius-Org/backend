@@ -7,11 +7,11 @@ const userController = {};
 
 // update user progress
 userController.updateProgress = catchAsync( async (req, res, next) =>{
-    const { title, courseId } = req.body;
+    const { idx, courseId } = req.body;
     // get user
     const user = await User.findById(req.USER_ID);
     // update progress
-    user.updateProgress(courseId, title);
+    user.updateProgress(courseId, idx);
     // save user
     user.save((err, _) => {
         if (err) return next(new AppError("Could Not Update Progress", 400));

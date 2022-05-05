@@ -229,7 +229,8 @@ courseController.getMyCourses = catchAsync(async (req, res, next) => {
       else {
         res.status(200).send({
           status: "success",
-          result: result.enrolledCourses
+          enrolledCourses: result.enrolledCourses,
+          enrolledCoursesDetails: result.enrolledCoursesDetails
         });
       }
     });
