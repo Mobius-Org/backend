@@ -34,6 +34,11 @@ router.get("/dashboard/myCourses", auth, courseController.getMyCourses);
 router.get("/enroll/verify-transactions/", courseController.verify);
 
 // student upload content
-router.post("/studentUpload", auth, courseController.studentUpload)
+router.post(
+  "/studentUpload",
+  auth,
+  courseController.upload,
+  courseController.studentUpload
+);
 
 module.exports = router;

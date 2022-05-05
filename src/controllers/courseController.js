@@ -2,6 +2,7 @@ const fs = require("fs");
 const User = require("../model/userModel");
 const upload = require("../middlewares/multer");
 const Course = require("../model/courseModel");
+const StudentContent = require("../model/studentContentModel");
 const AppError = require("../errors/appError");
 const catchAsync = require("../utils/catchAsync");
 const handlerFactory = require("../utils/handlerFactory");
@@ -30,7 +31,7 @@ courseController.createCourse = catchAsync(async (req, res, next) => {
     courseId = "MOB-" + `${Number(lastCourse[0].courseId.split("-")[1]) + 1}`;
   }
 
-  // //save new Course
+  //save new Course
   const newCourse = new Course({
     courseId,
     courseName,
@@ -203,15 +204,15 @@ courseController.getMyCourses = catchAsync(async (req, res, next) => {
 
 //student create new content
 courseController.studentUpload = catchAsync(async (req, res, next) => {
-  let { courseId, content} = req.body;
+  let { courseId, description, title } = req.body;
 
   // check if course exist
   const course = await Course.findOne({ courseId });
   if (!course) return next(new AppError("Course not found", 404));
 
-  //find user
+  //check if user is logged
   let user = await User.findById({ _id: req.USER_ID });
-  if (!user) return next(new AppError("Authorization Failed", 401));
+  if (!user) return next(new AppError("User not found", 400));
 
   // get video for content
   let videoUrl;
@@ -225,21 +226,24 @@ courseController.studentUpload = catchAsync(async (req, res, next) => {
     }
     fs.unlinkSync(path);
   }
- 
-  content = JSON.parse(content);
-  content.video = videoUrl.url;
 
-  // add content to course
-  course.addContents(content);
+  //create new Schema
+  const newStudentContent = new StudentContent({
+    uploader: req.USER_ID,
+    courseId,
+    title,
+    video: videoUrl,
+    description,
+  });
 
   //save the schema
-  await course.save((err, result) => {
+  newStudentContent.save((err, result) => {
     if (err) return next(new AppError({ message: err.message }, 400));
     else {
       //send a response
       res.status(201).send({
         status: "success",
-        message: "Review sent successfully",
+        message: "Student content uploaded successfully",
       });
     }
   });

@@ -10,14 +10,9 @@ const studentContentSchema = new Schema({
     ref: "User",
   },
   courseId: reqStr,
-  contents: [
-    {
-      title: String,
-      video: String,
-      description: String,
-      duration: String,
-    },
-  ],
+  video: reqStr,
+  description: reqStr,
+  title: reqStr,
   status: {
     type: String,
     enum: ["pending", "approved", "rejected"],
@@ -26,19 +21,14 @@ const studentContentSchema = new Schema({
 });
 
 // instance methods
-// // Student add Contents
-studentContentSchema.methods.addContents = function (content) {
-  //let cTime = content.duration.split(":"),
-  //   dTime = this.description.duration.split(":"),
-  //   cTimeMins = Number(cTime[0]),
-  //   cTimeSecs = Number(cTime[1]),
-  //   dTimeSecs = Number(dTime[1]),
-  //   tsecs = dTimeSecs + cTimeSecs,
-  //   dTimeMins = Number(dTime[0]) + cTimeMins + Math.floor(tsecs / 60);
-  // dTimeSecs = tsecs % 60;
 
-  // this.contents.duration = String(dTimeMins) + ":" + String(dTimeSecs);
-  this.contents.push(content);
+// Student upload Contents
+studentContentSchema.methods.updateStatus = function (status) {
+  if (status == "approved") {
+    this.status = "approved";
+  } else if (status == "rejected") {
+    this.status = "rejected";
+  }
 };
 
 module.exports = model("StudentContent", studentContentSchema);
