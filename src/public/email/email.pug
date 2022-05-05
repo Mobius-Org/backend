@@ -4,10 +4,17 @@ head
     meta(name='viewport' content='width=device-width')
     title
     style.
-body(style='width: 600px; margin: auto; background: white')
-    // Header for Mobius logo
-    table(role='presentation' align='left' style='border-bottom: 1px solid' width='100%')
+        * {
+        box-sizing: border-box;
+        }
+    link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito' type='text/css')
+body
+    table(role='presentation' style="background-color: white; width: 600px; height: 100%; margin: auto; font-family: 'Nunito';")
         tr
-            td(style='padding: 30px;')
-            img(alt='Mobius logo' src='C:\Users\Tochukwu\Desktop\mobius-email.png' width='200px')
-    block content
+            td
+                // Header for Mobius logo
+                table(role='presentation' align='center' style='border-bottom: 1px solid' width='100%')
+                    tr
+                        td(style='padding: 15px 30px;')
+                            img(alt='Mobius logo' src='https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507811/email%20attachments/mobius-logo.png' height='50px')
+                block content
