@@ -57,8 +57,14 @@ const userSchema = new Schema(
             type: String,
             default: "Start"
           },
-          idx: Number,
-          progress: Number
+          idx: {
+            type: Number,
+            default: 0
+          },
+          progress: {
+            type: Number,
+            default: 0
+          }
         },
         gameScore: Number,
         certificate: {
