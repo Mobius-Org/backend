@@ -10,7 +10,7 @@ router.patch(
 );
 
 // subscribe to newsletter
-router.patch(
+router.post(
     "/subscribe",
     userController.subscribe
 );

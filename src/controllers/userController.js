@@ -34,7 +34,7 @@ userController.subscribe = catchAsync( async (req, res, next) => {
 
     newsletter.save((err, _) => {
         if (err) return next(new AppError("There is an error, we will fix it soon", 400));
-        res.status(200).send({
+        res.status(201).send({
             status: "success",
             message: "Newsletter Subscription Successful!"
         })
