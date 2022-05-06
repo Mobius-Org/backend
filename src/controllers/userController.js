@@ -3,6 +3,7 @@ const Notif = require("../model/notificationModel");
 const Contents = require("../model/studentContentModel");
 const AppError = require("../errors/appError");
 const catchAsync = require("../utils/catchAsync");
+const { emailService }     = require('../utils/emailer');
 
 const userController = {};
 
@@ -72,12 +73,13 @@ userController.subscribe = catchAsync( async (req, res, next) => {
     newsletter.save((err, _) => {
         if (err) return next(new AppError("There is an error, we will fix it soon", 400));
         //send mail
+        console.log(email)
         let body = {
             data: {
                 title: `Welcome to Mobius Newsletter`
             },
-            recipient: user.email,
-            subject: `Welcome to Mobius Newsletter ${user.getFullName()}`,
+            recipient: email,
+            subject: `Welcome to Mobius Newsletter`,
             type: "pwd_reset",
             attachments: [{
                 filename:"mobius-logo.png",
@@ -91,7 +93,7 @@ userController.subscribe = catchAsync( async (req, res, next) => {
         };
 
         let mailer = new emailService();
-        await mailer.newsletterSubscribe(body);
+        mailer.newsletterSubscribe(body);
 
 
         res.status(201).send({
