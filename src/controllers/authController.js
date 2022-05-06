@@ -41,6 +41,31 @@ userAuth.signup = catchAsync(async (req, res, next) => {
     user.set({ name, age, email, favColor });
     user.save((err, result) => {
         if (err) return next(new AppError("Could Not Create User!", 400));
+
+        // send mail
+        let body = {
+            data: {
+                name: user.getFullName(),
+                title: `Welcome to Mobius ${user.getFullName()}`
+            },
+            recipient: user.email,
+            subject: `Welcome to Mobius ${user.getFullName()}`,
+            type: "pwd_reset",
+            attachments: [{
+                filename:"mobius-logo.png",
+                path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507811/email%20attachments/mobius-logo.png",
+                cid:"mobius-logo"
+            },{
+                filename:"child-jumping.gif",
+                path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651825445/email%20attachments/child-jumping.gif",
+                cid:"child-jumping"
+            }]
+        };
+
+        let mailer = new emailService();
+        mailer.signup(body);
+
+
         // send response
         jwt.createSendToken(result, 201, res);
     });

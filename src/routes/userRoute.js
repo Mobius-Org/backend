@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const { body } = require('express-validator');
 const { auth } = require('../middlewares/auth');
 const userController = require('../controllers/userController');
 
@@ -33,8 +34,9 @@ router.get(
 // subscribe to newsletter
 router.post(
     "/subscribe",
+    //Validation
+    body('email').isEmail(),
     userController.subscribe
 );
-
 
 module.exports = router;

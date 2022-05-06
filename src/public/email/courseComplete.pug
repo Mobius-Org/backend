@@ -1,0 +1,22 @@
+extends email
+
+block content
+    // Email Subject
+    table(role='presentation' align='left' width='100%')
+        tr
+            td(style='padding: 15px 30px 0px 30px; text-align: center;')
+                h1 Congratulations! 🎉🎉
+    // Email Body
+    table(role='presentation' align='left' width='100%')
+        tr
+            td(style='padding: 0 30px 15px 30px;')
+                img(src='cid:child-jumping' alt='Child jumping' width='100%')
+                p
+                    | Congratulations on completing your course
+                p
+                    | In true Mobius fashion, we are looking forward to your exploits and further experiences as you continue to learn. Also, share your feedback about the learning so we can keep improving our content.
+
+                p
+                    | Well done, Creator, 
+                    br
+                    span(style='font-weight:bold; margin-top: 1em;') Your partners in learning - Mobius
