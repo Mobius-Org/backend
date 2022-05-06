@@ -14,6 +14,7 @@ const studentContentSchema = new Schema({
   videoc: String,
   descriptionc: reqStr,
   titlec: reqStr,
+  courseImage: String,
   status: {
     type: String,
     enum: ["pending", "approved", "rejected"],

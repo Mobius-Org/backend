@@ -298,6 +298,7 @@ courseController.studentUpload = catchAsync(async (req, res, next) => {
     titlec: title,
     videoc: videoUrl.url,
     descriptionc: description,
+    courseImage: course.description.image
   });
 
   //save the schema
