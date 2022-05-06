@@ -1,5 +1,6 @@
 const User = require("../model/userModel");
 const Notif = require("../model/notificationModel");
+const Contents = require("../model/studentContentModel");
 const AppError = require("../errors/appError");
 const catchAsync = require("../utils/catchAsync");
 
@@ -43,6 +44,21 @@ userController.setGameRewards = catchAsync( async (req, res, next) => {
     });
 })
 
+userController.getMyBadges = catchAsync( async (req, res, next ) => {
+    const user = await User.findById(req.USER_ID);
+    
+});
+
+userController.getMyContents = catchAsync( async (req, res, next) => {
+    const user = await User.findById(req.USER_ID);
+    Contents.find({ uploader: req.USER_ID, status: { $gte: "approved" }}, function (err, docs) {
+        if (err) return next(new AppError("No Contents Found or Not Approved!", 400));
+        res.status(200).send({
+            status: "success",
+            result: docs
+        });
+    });
+});
 
 // subscribe to newsletter
 userController.subscribe = catchAsync( async (req, res, next) => {
