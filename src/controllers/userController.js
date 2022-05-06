@@ -51,7 +51,7 @@ userController.getMyBadges = catchAsync( async (req, res, next ) => {
 
 userController.getMyContents = catchAsync( async (req, res, next) => {
     const user = await User.findById(req.USER_ID);
-    Contents.find({ uploader: req.USER_ID, status: { $gte: "approved" }}, function (err, docs) {
+    Contents.find({ uploader: req.USER_ID, status: { $gte: "approved" }}, null, function (err, docs) {
         if (err) return next(new AppError("No Contents Found or Not Approved!", 400));
         res.status(200).send({
             status: "success",
