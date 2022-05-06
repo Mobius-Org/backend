@@ -24,6 +24,13 @@ router.get(
     userController.getMyContents
 );
 
+// get my badges
+router.get(
+    "/dashboard/my-badges/:courseId",
+    auth,
+    userController.getMyBadges
+);
+
 // subscribe to newsletter
 router.post(
     "/subscribe",

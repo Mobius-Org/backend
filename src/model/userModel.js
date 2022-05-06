@@ -172,7 +172,9 @@ userSchema.methods.setGameBadge = function(id) {
 
 // Set Game Badge
 userSchema.methods.setCreatorBadge = function(id) {
-  this.enrolledCoursesDetails.filter(course => course.id === id).badges.creatorBadge = "acquired";
+  let creatorBadge = this.enrolledCoursesDetails.filter(course => course.id === id)[0];
+  creatorBadge.badges.creatorBadge = "acquired";
+  this.enrolledCoursesDetails[this.enrolledCoursesDetails.indexOf(this.enrolledCoursesDetails.filter(course => course.id === id)[0])] = creatorBadge;
 };
 
 // Set Game Score
@@ -193,6 +195,11 @@ userSchema.methods.setProgress = function(id, currSection, progress) {
     currCourse.progress.status = "Continue"
   }
   this.enrolledCoursesDetails[this.enrolledCoursesDetails.indexOf(this.enrolledCoursesDetails.filter(course => course.id === id)[0])] = currCourse;
+};
+
+// Get badges
+userSchema.methods.getBadges = function (id) {
+  return this.enrolledCoursesDetails.filter(course => course.id === id)[0].badges;
 };
 
 // Get Name
