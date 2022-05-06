@@ -115,6 +115,22 @@ exports.emailService = class Email{
         return res.accepted
     }
 
+    async courseComplete(body){
+        let html = pug.renderFile( path.join(__dirname, "../public/email/courseComplete.pug"), body.data );
+        const mailOptions = {
+            from: this.from,
+            to: body.recipient,
+            subject: body.subject,
+            html: html,
+            priority: "high",
+            attachments:body.attachments
+        };
+        // Create a transport and send email
+        this.transporter().use('compile', inlinecss());
+        let res = await this.transporter().sendMail(mailOptions);
+        return res.accepted
+    }
+
     async send(body){
         const mailOptions = {
             from: this.from,
