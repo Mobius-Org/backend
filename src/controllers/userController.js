@@ -71,6 +71,29 @@ userController.subscribe = catchAsync( async (req, res, next) => {
 
     newsletter.save((err, _) => {
         if (err) return next(new AppError("There is an error, we will fix it soon", 400));
+        //send mail
+        let body = {
+            data: {
+                title: `Welcome to Mobius Newsletter`
+            },
+            recipient: user.email,
+            subject: `Welcome to Mobius Newsletter ${user.getFullName()}`,
+            type: "pwd_reset",
+            attachments: [{
+                filename:"mobius-logo.png",
+                path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651507811/email%20attachments/mobius-logo.png",
+                cid:"mobius-logo"
+            },{
+                filename:"welcome-blue.gif",
+                path:"https://res.cloudinary.com/mobius-kids-org/image/upload/v1651825332/email%20attachments/welcome-blue.gif",
+                cid:"welcome-blue"
+            }]
+        };
+
+        let mailer = new emailService();
+        await mailer.newsletterSubscribe(body);
+
+
         res.status(201).send({
             status: "success",
             message: "Newsletter Subscription Successful!"

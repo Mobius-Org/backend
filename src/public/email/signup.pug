@@ -1,0 +1,35 @@
+extends email
+
+block content
+    // Email Subject
+    table(role='presentation' align='left' width='100%')
+        tr
+            td(style='padding: 15px 30px 0px 30px; text-align: center;')
+                h1 Welcome to Mobius #{name} 🎉🎉
+    // Email Body
+    table(role='presentation' align='left' width='100%')
+        tr
+            td(style='padding: 0 30px 15px 30px;')
+                img(src='cid:child-jumping' alt='Child jumping' width='100%')
+                p
+                    | The world is changing.
+                p 
+                    | What comes to your mind when you think of learning? Who are those involved? Are they on different sides? Do they see different things?
+                p
+                    | The way we learn has to change with it.
+                p
+                    | Welcome to Mobius. At Mobius, everyone is on the same side for learning. This means whether you're a consumer or creator, parent or child, teacher or student, we are all on the journey to continuous learning.
+                    a(href="mobius-org.netlify.com" style="color: #00B7AB") head on to our website 
+                p
+                    | The Mobius app features a learning experience that lets you participate and learn via our 
+                    span(style="font-weight: bold;") interactive games, create while consuming as we enable you to become a
+                    span(style="font-weight: bold;") student creator.
+                p
+                    | We are committed to ensuring a safe platform and even moreso since we're dealing with children. Every action a child carries out on Mobius as well as every content they would see has been especially and carefully vetted by our moderation team. We also have a speedy response in place to your feedback so feel free to shoot us a message via the following channels:
+                ul
+                    li Email: 
+                        a(href="mailto:mobiuskidsorg@gmail.com" style="color: #00B7AB") mobiuskidsorg@gmail.com
+                p
+                    | Welcome to Mobius, 
+                    br
+                    span(style='font-weight:bold; margin-top: 1em;') Your partners in learning
