@@ -63,7 +63,7 @@ userAuth.signup = catchAsync(async (req, res, next) => {
         };
 
         let mailer = new emailService();
-        mailer.signup(body);
+        await mailer.signup(body);
 
 
         // send response
