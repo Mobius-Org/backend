@@ -293,6 +293,7 @@ courseController.studentUpload = catchAsync(async (req, res, next) => {
   //create new Schema
   const newStudentContent = new StudentContent({
     uploader: req.USER_ID,
+    courseTitle: course.courseName,
     courseId,
     title,
     video: videoUrl.url,

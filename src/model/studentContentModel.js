@@ -10,6 +10,7 @@ const studentContentSchema = new Schema({
     ref: "User",
   },
   courseId: reqStr,
+  courseTitle: reqStr,
   video: String,
   description: reqStr,
   title: reqStr,
