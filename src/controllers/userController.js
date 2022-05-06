@@ -42,11 +42,6 @@ userController.setGameRewards = catchAsync( async (req, res, next) => {
             message: "You acquired a game badge for this course!"
         });
     });
-})
-
-userController.getMyBadges = catchAsync( async (req, res, next ) => {
-    const user = await User.findById(req.USER_ID);
-    
 });
 
 // get my contents

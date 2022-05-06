@@ -25,7 +25,7 @@ router.get(
 
 // get my badges
 router.get(
-    "/dashboard/my-badges",
+    "/dashboard/my-badges/:courseId",
     auth,
     userController.getMyBadges
 );
