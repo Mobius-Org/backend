@@ -11,9 +11,9 @@ const studentContentSchema = new Schema({
   },
   courseId: reqStr,
   courseTitle: reqStr,
-  video: String,
-  description: reqStr,
-  title: reqStr,
+  videoc: String,
+  descriptionc: reqStr,
+  titlec: reqStr,
   status: {
     type: String,
     enum: ["pending", "approved", "rejected"],

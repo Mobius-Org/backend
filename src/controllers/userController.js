@@ -49,14 +49,26 @@ userController.getMyBadges = catchAsync( async (req, res, next ) => {
     
 });
 
+// get my contents
 userController.getMyContents = catchAsync( async (req, res, next) => {
-    const user = await User.findById(req.USER_ID);
     Contents.find({ uploader: req.USER_ID, status: { $gte: "approved" }}, null, function (err, docs) {
         if (err) return next(new AppError("No Contents Found or Not Approved!", 400));
         res.status(200).send({
             status: "success",
             result: docs
         });
+    });
+});
+
+// get my badges
+userController.getMyBadges = catchAsync( async (req, res, next) => {
+    const courseId = req.params.courseId;
+    const user = await User.findById({ _id: req.USER_ID });
+    const myBadges = user.getMyBadges(courseId);
+    if (!myBadges) return next(new AppError("Could Not Get Badges!", 400));
+    res.status(200).send({
+        status: "success",
+        result: myBadges
     });
 });
 
