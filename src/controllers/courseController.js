@@ -8,6 +8,7 @@ const paystack = require('../services/paystack');
 const catchAsync = require("../utils/catchAsync");
 const { cloudUpload } = require("../utils/cloudinary");
 const { emailService }     = require('../utils/emailer');
+const StudentContent = require("../model/studentContentModel");
 
 
 const courseController = {};
