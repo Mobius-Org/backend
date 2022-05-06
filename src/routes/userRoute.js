@@ -16,6 +16,12 @@ router.patch(
     userController.setGameRewards
 );
 
+// get my contents
+router.get(
+    "/dashboard/my-contents",
+    auth,
+    userController.getMyContents
+);
 
 // subscribe to newsletter
 router.post(
