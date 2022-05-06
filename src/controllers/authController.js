@@ -39,7 +39,7 @@ userAuth.signup = catchAsync(async (req, res, next) => {
     user.setPassword(password);
     // set details
     user.set({ name, age, email, favColor });
-    user.save((err, result) => {
+    user.save( async (err, result) => {
         if (err) return next(new AppError("Could Not Create User!", 400));
 
         // send mail
@@ -63,7 +63,7 @@ userAuth.signup = catchAsync(async (req, res, next) => {
         };
 
         let mailer = new emailService();
-        mailer.signup(body);
+        await mailer.signup(body);
 
 
         // send response
