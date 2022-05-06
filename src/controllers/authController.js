@@ -212,4 +212,5 @@ userAuth.logout = catchAsync(async (req, res, next) => {
 });
 
 
+//MOB-28
 module.exports = userAuth;
