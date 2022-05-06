@@ -3,6 +3,7 @@ const Notif = require("../model/notificationModel");
 const Contents = require("../model/studentContentModel");
 const AppError = require("../errors/appError");
 const catchAsync = require("../utils/catchAsync");
+const { validationResult } = require('express-validator');
 const { emailService }     = require('../utils/emailer');
 
 const userController = {};
@@ -65,7 +66,12 @@ userController.getMyContents = catchAsync( async (req, res, next) => {
 userController.subscribe = catchAsync( async (req, res, next) => {
     // get email
     const { email } = req.body;
-    if (!email) return next(new AppError("No Email To Subscribe", 400));
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()){
+        if (errors.array()[0].param === "email") return next(new AppError("Invalid Email!", 400));
+    }
 
     const newsletter = new Notif();
     newsletter.subscribe(email);
@@ -73,7 +79,6 @@ userController.subscribe = catchAsync( async (req, res, next) => {
     newsletter.save((err, _) => {
         if (err) return next(new AppError("There is an error, we will fix it soon", 400));
         //send mail
-        console.log(email)
         let body = {
             data: {
                 title: `Welcome to Mobius Newsletter`
