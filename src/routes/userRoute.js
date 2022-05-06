@@ -9,6 +9,14 @@ router.patch(
     userController.updateProgress
 );
 
+// set game rewards
+router.patch(
+    "/view-course/set-game-score/:courseId",
+    auth,
+    userController.setGameRewards
+);
+
+
 // subscribe to newsletter
 router.post(
     "/subscribe",

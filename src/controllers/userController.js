@@ -23,6 +23,26 @@ userController.updateProgress = catchAsync( async (req, res, next) =>{
     });
 });
 
+// set game badge and score
+userController.setGameRewards = catchAsync( async (req, res, next) => {
+    const { score } = req.body;
+          courseId = req.params.courseId;
+    // get user
+    const user = await User.findById(req.USER_ID);
+    // set score
+    user.setScore(courseId, score);
+    // get badge
+    user.setGameBadge(courseId);
+    // save user
+    user.save((err, _) => {
+        if (err) return next(new AppError("Could not set game rewards", 400));
+        res.status(200).send({
+            status: "success",
+            message: "You acquired a game badge for this course!"
+        });
+    });
+})
+
 
 // subscribe to newsletter
 userController.subscribe = catchAsync( async (req, res, next) => {
