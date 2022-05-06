@@ -198,8 +198,8 @@ userSchema.methods.setProgress = function(id, currSection, progress) {
 };
 
 // Get badges
-userSchema.methods.getBadges = function () {
-  return this.enrolledCoursesDetails.badges;
+userSchema.methods.getBadges = function (id) {
+  return this.enrolledCoursesDetails.filter(course => course.id === id)[0].badges;
 };
 
 // Get Name
