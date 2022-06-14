@@ -14,6 +14,7 @@ app.use(express.urlencoded({ extended: false }));
 // enable cors for specific route
 const allowedOrigins = [
   "https://mobiusorg.netlify.app",
+  "https://mobiusorg.vercel.app",
   "http://localhost:3000",
   "http://localhost:3001",
 ];
